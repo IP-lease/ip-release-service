@@ -4,8 +4,8 @@ import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedEx
 import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
 import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
-import com.iplease.server.ip.release.global.Permission
-import com.iplease.server.ip.release.global.Role
+import com.iplease.server.ip.release.global.type.Permission
+import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.grpc.service.IpManageService
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestHeader
@@ -17,7 +17,8 @@ class IpReleaseDemandController(
     //IP 할당 해제 신청
     fun demandReleaseIp(@PathVariable assignedIpUuid: Long,
                         @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
-                        @RequestHeader("X-Login-Account-Role") role: Role) {
+                        @RequestHeader("X-Login-Account-Role") role: Role
+    ) {
         checkPermission(role, Permission.IP_RELEASE_DEMAND)
         checkAssignedIpExists(assignedIpUuid)
         checkAssignedIpAccess(assignedIpUuid, issuerUuid)

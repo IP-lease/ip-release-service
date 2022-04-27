@@ -5,8 +5,8 @@ import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpE
 import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.global.grpc.service.IpManageService
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
-import com.iplease.server.ip.release.global.Permission
-import com.iplease.server.ip.release.global.Role
+import com.iplease.server.ip.release.global.type.Permission
+import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.grpc.dto.AssignedIp
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
