@@ -1,10 +1,12 @@
 package com.iplease.server.ip.release.domain.request.controller
 
+import com.iplease.server.ip.release.domain.request.dto.IpReleaseDemandDto
 import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedException
 import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
 import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.global.grpc.service.IpManageService
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
+import com.iplease.server.ip.release.domain.request.type.DemandStatus
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.grpc.dto.AssignedIp
@@ -16,6 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDateTime
 import kotlin.properties.Delegates
 import kotlin.random.Random
@@ -44,10 +47,21 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid (issuerUuid)가 해당 assignedIp 의 소유자(issuer)의 uuid와 같아야한다.
     @Test @DisplayName("IP 할당 해제 신청 - 신청 성공")
     fun demandReleaseIpSuccess() {
+        val uuid = Random.nextLong()
+        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
+
         whenever(ipManageService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
+        whenever(ipReleaseDemandService.demand(assignedIpUuid, issuerUuid)).thenReturn(dto.toMono())
 
-        target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR)
+        val response = target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block()!!
+        val body = response.body!!
+        assert(response.statusCode.is2xxSuccessful)
+
+        assert(body.uuid == uuid)
+        assert(body.assignedIpUuid == assignedIpUuid)
+        assert(body.issuerUuid == issuerUuid)
+        assert(body.status == DemandStatus.CREATED)
 
         verify(ipReleaseDemandService, times(1)).demand(assignedIpUuid, issuerUuid)
     }
@@ -57,7 +71,7 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
 
-        val exception = assertThrows<PermissionDeniedException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.GUEST) }
+        val exception = assertThrows<PermissionDeniedException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.GUEST).block() }
         assert(exception.permission == Permission.IP_RELEASE_DEMAND)
 
         verify(ipReleaseDemandService, times(0)).demand(assignedIpUuid, issuerUuid)
@@ -68,7 +82,7 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(false)
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
 
-        val exception = assertThrows<UnknownAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR) }
+        val exception = assertThrows<UnknownAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block() }
         assert(exception.uuid == assignedIpUuid)
 
         verify(ipReleaseDemandService, times(0)).demand(assignedIpUuid, issuerUuid)
@@ -79,7 +93,7 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp.copy(issuerUuid = issuerUuid * -1))
 
-        val exception = assertThrows<WrongAccessAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR) }
+        val exception = assertThrows<WrongAccessAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block() }
         assert(exception.uuid == assignedIpUuid)
         assert(exception.issuerUuid == issuerUuid)
 
