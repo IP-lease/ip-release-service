@@ -20,7 +20,7 @@ class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleas
             }
     }
 
-    override fun cancel(uuid: Long, issuerUuid: Long) {
+    override fun cancel(uuid: Long, issuerUuid: Long): Mono<Unit> {
         TODO("Not yet implemented")
     }
 }

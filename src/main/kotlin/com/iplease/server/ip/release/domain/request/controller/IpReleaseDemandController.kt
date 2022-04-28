@@ -40,8 +40,10 @@ class IpReleaseDemandController(
     @PostMapping("/{uuid}")
     fun cancelDemandReleaseIp(@PathVariable uuid: Long,
                               @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
-                              @RequestHeader("X-Login-Account-Role") role: Role) {
-        ipReleaseDemandService.cancel(uuid, issuerUuid)
+                              @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<Unit>> {
+        checkPermission(role, Permission.IP_RELEASE_DEMAND_CANCEL)
+        return ipReleaseDemandService.cancel(uuid, issuerUuid)
+            .map { ResponseEntity.ok(it) }
     }
 
     private fun checkPermission(role: Role, permission: Permission) {

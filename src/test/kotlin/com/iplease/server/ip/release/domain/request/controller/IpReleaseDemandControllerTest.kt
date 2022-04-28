@@ -47,10 +47,23 @@ class IpReleaseDemandControllerTest {
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
     fun demandReleaseIpCancelSuccess() {
         val uuid = Random.nextLong()
+        whenever(ipReleaseDemandService.cancel(uuid, issuerUuid)).thenReturn(Unit.toMono())
 
-        target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR)
+        val response = target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block()!!
 
+        assert(response.statusCode.is2xxSuccessful)
+        assert(response.body==Unit)
         verify(ipReleaseDemandService, times(1)).cancel(uuid, issuerUuid)
+    }
+
+    @Test @DisplayName("IP 할당 해제 신청 취소 - 권한이 없을경우")
+    fun demandReleaseIpCancelFailurePermissionDenied() {
+        val uuid = Random.nextLong()
+
+        val exception = assertThrows<PermissionDeniedException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.GUEST).block() }
+
+        assert(exception.permission == Permission.IP_RELEASE_DEMAND_CANCEL)
+        verify(ipReleaseDemandService, times(0)).cancel(uuid, issuerUuid)
     }
 
     //IP 할당 해제 신청 조건
@@ -69,13 +82,12 @@ class IpReleaseDemandControllerTest {
 
         val response = target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block()!!
         val body = response.body!!
-        assert(response.statusCode.is2xxSuccessful)
 
+        assert(response.statusCode.is2xxSuccessful)
         assert(body.uuid == uuid)
         assert(body.assignedIpUuid == assignedIpUuid)
         assert(body.issuerUuid == issuerUuid)
         assert(body.status == DemandStatus.CREATED)
-
         verify(ipReleaseDemandService, times(1)).demand(assignedIpUuid, issuerUuid)
     }
 
@@ -85,8 +97,8 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
 
         val exception = assertThrows<PermissionDeniedException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.GUEST).block() }
-        assert(exception.permission == Permission.IP_RELEASE_DEMAND)
 
+        assert(exception.permission == Permission.IP_RELEASE_DEMAND)
         verify(ipReleaseDemandService, times(0)).demand(assignedIpUuid, issuerUuid)
     }
 
@@ -96,8 +108,8 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
 
         val exception = assertThrows<UnknownAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block() }
-        assert(exception.uuid == assignedIpUuid)
 
+        assert(exception.uuid == assignedIpUuid)
         verify(ipReleaseDemandService, times(0)).demand(assignedIpUuid, issuerUuid)
     }
 
@@ -107,9 +119,9 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp.copy(issuerUuid = issuerUuid * -1))
 
         val exception = assertThrows<WrongAccessAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block() }
+
         assert(exception.uuid == assignedIpUuid)
         assert(exception.issuerUuid == issuerUuid)
-
         verify(ipReleaseDemandService, times(0)).demand(assignedIpUuid, issuerUuid)
     }
 }
