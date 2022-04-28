@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader
 import reactor.core.publisher.Mono
 
 class IpReleaseDemandController(
-    val ipReleaseDemandService: IpReleaseDemandService,
-    val ipManageService: IpManageService
+    private val ipReleaseDemandService: IpReleaseDemandService,
+    private val ipManageService: IpManageService
     ) {
     //IP 할당 해제 신청
     fun demandReleaseIp(@PathVariable assignedIpUuid: Long,
