@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.request.repository
 
-import com.iplease.server.ip.release.domain.request.table.IpReleaseDemandTable
+import com.iplease.server.ip.release.domain.request.data.table.IpReleaseDemandTable
 import org.springframework.data.r2dbc.repository.R2dbcRepository
 import reactor.core.publisher.Mono
 

@@ -1,6 +1,6 @@
-package com.iplease.server.ip.release.domain.request.table
+package com.iplease.server.ip.release.domain.request.data.table
 
-import com.iplease.server.ip.release.domain.request.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 

@@ -3,7 +3,7 @@ package com.iplease.server.ip.release.domain.request.controller
 import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedException
 import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
 import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
-import com.iplease.server.ip.release.domain.request.response.DemandReleaseIpResponse
+import com.iplease.server.ip.release.domain.request.data.response.DemandReleaseIpResponse
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role

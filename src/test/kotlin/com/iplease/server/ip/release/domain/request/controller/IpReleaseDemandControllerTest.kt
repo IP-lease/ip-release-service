@@ -1,12 +1,12 @@
 package com.iplease.server.ip.release.domain.request.controller
 
-import com.iplease.server.ip.release.domain.request.dto.IpReleaseDemandDto
+import com.iplease.server.ip.release.domain.request.data.dto.IpReleaseDemandDto
 import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedException
 import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
 import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.global.grpc.service.IpManageService
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
-import com.iplease.server.ip.release.domain.request.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.grpc.dto.AssignedIp

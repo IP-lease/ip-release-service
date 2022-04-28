@@ -1,6 +1,6 @@
-package com.iplease.server.ip.release.domain.request.dto
+package com.iplease.server.ip.release.domain.request.data.dto
 
-import com.iplease.server.ip.release.domain.request.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
 
 data class IpReleaseDemandDto (
     val uuid: Long,

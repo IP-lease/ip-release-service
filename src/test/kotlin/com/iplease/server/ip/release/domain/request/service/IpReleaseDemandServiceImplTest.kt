@@ -2,8 +2,8 @@ package com.iplease.server.ip.release.domain.request.service
 
 import com.iplease.server.ip.release.domain.request.exception.AlreadyDemandedAssignedIpException
 import com.iplease.server.ip.release.domain.request.repository.IpReleaseDemandRepository
-import com.iplease.server.ip.release.domain.request.table.IpReleaseDemandTable
-import com.iplease.server.ip.release.domain.request.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.table.IpReleaseDemandTable
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

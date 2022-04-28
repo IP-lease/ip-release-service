@@ -1,10 +1,10 @@
 package com.iplease.server.ip.release.domain.request.service
 
-import com.iplease.server.ip.release.domain.request.dto.IpReleaseDemandDto
+import com.iplease.server.ip.release.domain.request.data.dto.IpReleaseDemandDto
 import com.iplease.server.ip.release.domain.request.exception.AlreadyDemandedAssignedIpException
 import com.iplease.server.ip.release.domain.request.repository.IpReleaseDemandRepository
-import com.iplease.server.ip.release.domain.request.table.IpReleaseDemandTable
-import com.iplease.server.ip.release.domain.request.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.table.IpReleaseDemandTable
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
 import reactor.core.publisher.Mono
 
 class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleaseDemandRepository) : IpReleaseDemandService {
