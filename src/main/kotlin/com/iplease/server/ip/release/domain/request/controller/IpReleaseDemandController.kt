@@ -4,10 +4,12 @@ import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedEx
 import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
 import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.domain.request.data.response.DemandReleaseIpResponse
+import com.iplease.server.ip.release.domain.request.exception.WrongAccessDemandException
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
-import com.iplease.server.ip.release.global.grpc.service.IpManageService
+import com.iplease.server.ip.release.global.grpc.service.IpManageQueryService
+import com.iplease.server.ip.release.global.grpc.service.IpReleaseDemandQueryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,7 +22,8 @@ import reactor.core.publisher.Mono
 @RequestMapping("/api/v1/ip/release/demand")
 class IpReleaseDemandController(
     private val ipReleaseDemandService: IpReleaseDemandService,
-    private val ipManageService: IpManageService
+    private val ipReleaseDemandQueryService: IpReleaseDemandQueryService,
+    private val ipManageQueryService: IpManageQueryService
     ) {
     //IP 할당 해제 신청
     @PostMapping("/{assignedIpUuid}")
@@ -42,8 +45,14 @@ class IpReleaseDemandController(
                               @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                               @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<Unit>> {
         checkPermission(role, Permission.IP_RELEASE_DEMAND_CANCEL)
+        checkDemandAccess(uuid, issuerUuid)
         return ipReleaseDemandService.cancel(uuid, issuerUuid)
             .map { ResponseEntity.ok(it) }
+    }
+
+    private fun checkDemandAccess(uuid: Long, issuerUuid: Long) {
+        val demand = ipReleaseDemandQueryService.getDemandById(uuid)
+        if(demand.issuerUuid != issuerUuid) throw WrongAccessDemandException(uuid, issuerUuid)
     }
 
     private fun checkPermission(role: Role, permission: Permission) {
@@ -51,11 +60,11 @@ class IpReleaseDemandController(
     }
 
     private fun checkAssignedIpExists(assignedIpUuid: Long) {
-        if (!ipManageService.existsAssignedIpByUuid(assignedIpUuid)) throw UnknownAssignedIpException(assignedIpUuid)
+        if (!ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)) throw UnknownAssignedIpException(assignedIpUuid)
     }
 
     private fun checkAssignedIpAccess(assignedIpUuid: Long, issuerUuid: Long) {
-        val assignedIp = ipManageService.getAssignedIpByUuid(assignedIpUuid)
+        val assignedIp = ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)
         if(assignedIp.issuerUuid != issuerUuid) throw WrongAccessAssignedIpException(assignedIpUuid, issuerUuid)
     }
 }
