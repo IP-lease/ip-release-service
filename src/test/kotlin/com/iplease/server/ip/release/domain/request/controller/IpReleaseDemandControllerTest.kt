@@ -40,6 +40,19 @@ class IpReleaseDemandControllerTest {
         assignedIp = AssignedIp(assignedIpUuid, issuerUuid, Random.nextLong(), LocalDateTime.now())
     }
 
+    //IP 할당 해제 신청 취소 조건
+    //IP_RELEASE_DEMAND_CANCEL 권한이 있어야하며,
+    //취소할 신청이 존재해야하며,
+    //요청자의 uuid가 신청자의 uuid와 같아야 한다.
+    @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
+    fun demandReleaseIpCancelSuccess() {
+        val uuid = Random.nextLong()
+
+        target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR)
+
+        verify(ipReleaseDemandService, times(1)).cancel(uuid, issuerUuid)
+    }
+
     //IP 할당 해제 신청 조건
     //IP_RELEASE_DEMAND 권한이 있어야하며,
     //동일한 assignedIp 로 진행중인 해제신청이 없어야 하며, --> 서비스에서 검사 예정

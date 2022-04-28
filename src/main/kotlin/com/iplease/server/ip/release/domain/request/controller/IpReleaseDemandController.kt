@@ -36,6 +36,14 @@ class IpReleaseDemandController(
             .map { ResponseEntity.ok(it) }
     }
 
+    //IP 할당 해제 신청 취소
+    @PostMapping("/{uuid}")
+    fun cancelDemandReleaseIp(@PathVariable uuid: Long,
+                              @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
+                              @RequestHeader("X-Login-Account-Role") role: Role) {
+        ipReleaseDemandService.cancel(uuid, issuerUuid)
+    }
+
     private fun checkPermission(role: Role, permission: Permission) {
         if(!role.hasPermission(permission)) throw PermissionDeniedException(permission)
     }

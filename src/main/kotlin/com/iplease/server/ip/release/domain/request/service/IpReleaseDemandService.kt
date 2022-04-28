@@ -5,4 +5,5 @@ import reactor.core.publisher.Mono
 
 interface IpReleaseDemandService {
     fun demand(assignedIpUuid: Long, issuerUuid: Long): Mono<IpReleaseDemandDto>
+    fun cancel(uuid: Long, issuerUuid: Long)
 }

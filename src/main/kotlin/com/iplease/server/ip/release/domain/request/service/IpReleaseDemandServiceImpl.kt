@@ -19,4 +19,8 @@ class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleas
                     .map { table ->  IpReleaseDemandDto(table.uuid, table.assignedIpUuid, table.issuerUuid, table.status) }
             }
     }
+
+    override fun cancel(uuid: Long, issuerUuid: Long) {
+        TODO("Not yet implemented")
+    }
 }
