@@ -5,6 +5,7 @@ import com.iplease.server.ip.release.domain.request.exception.AlreadyDemandedAss
 import com.iplease.server.ip.release.domain.request.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.domain.request.data.table.IpReleaseDemandTable
 import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.exception.NotCancelableDemandException
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
@@ -21,6 +22,13 @@ class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleas
     }
 
     override fun cancel(uuid: Long, issuerUuid: Long): Mono<Unit> {
-        TODO("Not yet implemented")
+        return ipReleaseDemandRepository.findById(uuid)
+            .flatMap {
+                if(it.status.isCancelable)
+                    ipReleaseDemandRepository.deleteById(uuid)
+                        .map { }
+                else
+                    Mono.defer { Mono.error(NotCancelableDemandException(uuid)) }
+            }
     }
 }

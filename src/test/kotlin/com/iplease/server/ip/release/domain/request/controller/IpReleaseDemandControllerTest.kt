@@ -29,7 +29,9 @@ class IpReleaseDemandControllerTest {
     private lateinit var ipManageQueryService: IpManageQueryService
     private var assignedIpUuid by Delegates.notNull<Long>()
     private var issuerUuid by Delegates.notNull<Long>()
+    private var uuid by Delegates.notNull<Long>()
     private lateinit var assignedIp: AssignedIp
+
     @BeforeEach
     fun setUp() {
         ipReleaseDemandService = mock()
@@ -38,6 +40,7 @@ class IpReleaseDemandControllerTest {
         target = IpReleaseDemandController(ipReleaseDemandService, ipReleaseDemandQueryService, ipManageQueryService)
         assignedIpUuid = Random.nextLong()
         issuerUuid = Random.nextLong()
+        uuid = Random.nextLong()
         assignedIp = AssignedIp(assignedIpUuid, issuerUuid, Random.nextLong(), LocalDateTime.now())
     }
 
@@ -47,7 +50,6 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid가 신청자의 uuid와 같아야 한다.
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
     fun demandReleaseIpCancelSuccess() {
-        val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
 
         whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
@@ -63,7 +65,6 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 권한이 없을경우")
     fun demandReleaseIpCancelFailurePermissionDenied() {
-        val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatus.CREATED)
 
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
@@ -77,8 +78,6 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 신청이 존재하지 않을경우")
     fun demandReleaseIpCancelFailureDemandNotExists() {
-        val uuid = Random.nextLong()
-
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(false)
 
         val exception = assertThrows<UnknownDemandException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block() }
@@ -89,7 +88,6 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 요청자가 신청자가 아닐경우")
     fun demandReleaseIpCancelFailureNotOwner() {
-        val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatus.CREATED)
 
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
@@ -109,7 +107,6 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid (issuerUuid)가 해당 assignedIp 의 소유자(issuer)의 uuid와 같아야한다.
     @Test @DisplayName("IP 할당 해제 신청 - 신청 성공")
     fun demandReleaseIpSuccess() {
-        val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
 
         whenever(ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
