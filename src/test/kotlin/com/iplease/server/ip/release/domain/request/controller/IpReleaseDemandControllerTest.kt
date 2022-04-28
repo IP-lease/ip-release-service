@@ -24,12 +24,12 @@ import kotlin.properties.Delegates
 import kotlin.random.Random
 
 class IpReleaseDemandControllerTest {
-    lateinit var target: IpReleaseDemandController
-    lateinit var ipReleaseDemandService: IpReleaseDemandService
-    lateinit var ipManageService: IpManageService
-    var assignedIpUuid by Delegates.notNull<Long>()
-    var issuerUuid by Delegates.notNull<Long>()
-    lateinit var assignedIp: AssignedIp
+    private lateinit var target: IpReleaseDemandController
+    private lateinit var ipReleaseDemandService: IpReleaseDemandService
+    private lateinit var ipManageService: IpManageService
+    private var assignedIpUuid by Delegates.notNull<Long>()
+    private var issuerUuid by Delegates.notNull<Long>()
+    private lateinit var assignedIp: AssignedIp
     @BeforeEach
     fun setUp() {
         ipReleaseDemandService = mock()

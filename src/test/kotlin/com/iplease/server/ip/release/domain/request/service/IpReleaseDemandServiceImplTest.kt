@@ -17,10 +17,10 @@ import kotlin.properties.Delegates
 import kotlin.random.Random
 
 class IpReleaseDemandServiceImplTest {
-    lateinit var repository: IpReleaseDemandRepository
-    lateinit var target: IpReleaseDemandServiceImpl
-    var assignedIpUuid by Delegates.notNull<Long>()
-    var issuerUuid by Delegates.notNull<Long>()
+    private lateinit var repository: IpReleaseDemandRepository
+    private lateinit var target: IpReleaseDemandServiceImpl
+    private var assignedIpUuid by Delegates.notNull<Long>()
+    private var issuerUuid by Delegates.notNull<Long>()
 
     @BeforeEach
     fun setUp() {
