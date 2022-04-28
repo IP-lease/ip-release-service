@@ -1,10 +1,7 @@
 package com.iplease.server.ip.release.domain.request.controller
 
-import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedException
-import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
-import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.domain.request.data.response.DemandReleaseIpResponse
-import com.iplease.server.ip.release.domain.request.exception.WrongAccessDemandException
+import com.iplease.server.ip.release.domain.request.exception.*
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
@@ -45,13 +42,18 @@ class IpReleaseDemandController(
                               @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                               @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<Unit>> {
         checkPermission(role, Permission.IP_RELEASE_DEMAND_CANCEL)
+        checkDemandExists(uuid)
         checkDemandAccess(uuid, issuerUuid)
         return ipReleaseDemandService.cancel(uuid, issuerUuid)
             .map { ResponseEntity.ok(it) }
     }
 
+    private fun checkDemandExists(uuid: Long) {
+        if(!ipReleaseDemandQueryService.existsDemandByUuid(uuid)) throw UnknownDemandException(uuid)
+    }
+
     private fun checkDemandAccess(uuid: Long, issuerUuid: Long) {
-        val demand = ipReleaseDemandQueryService.getDemandById(uuid)
+        val demand = ipReleaseDemandQueryService.getDemandByUuid(uuid)
         if(demand.issuerUuid != issuerUuid) throw WrongAccessDemandException(uuid, issuerUuid)
     }
 

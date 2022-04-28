@@ -1,13 +1,10 @@
 package com.iplease.server.ip.release.domain.request.controller
 
 import com.iplease.server.ip.release.domain.request.data.dto.IpReleaseDemandDto
-import com.iplease.server.ip.release.domain.request.exception.PermissionDeniedException
-import com.iplease.server.ip.release.domain.request.exception.UnknownAssignedIpException
-import com.iplease.server.ip.release.domain.request.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.global.grpc.service.IpManageQueryService
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
 import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
-import com.iplease.server.ip.release.domain.request.exception.WrongAccessDemandException
+import com.iplease.server.ip.release.domain.request.exception.*
 import com.iplease.server.ip.release.global.grpc.service.IpReleaseDemandQueryService
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
@@ -53,7 +50,8 @@ class IpReleaseDemandControllerTest {
         val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
 
-        whenever(ipReleaseDemandQueryService.getDemandById(uuid)).thenReturn(dto)
+        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
         whenever(ipReleaseDemandService.cancel(uuid, issuerUuid)).thenReturn(Unit.toMono())
 
         val response = target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block()!!
@@ -68,11 +66,24 @@ class IpReleaseDemandControllerTest {
         val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatus.CREATED)
 
-        whenever(ipReleaseDemandQueryService.getDemandById(uuid)).thenReturn(dto)
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
+        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
 
         val exception = assertThrows<PermissionDeniedException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.GUEST).block() }
 
         assert(exception.permission == Permission.IP_RELEASE_DEMAND_CANCEL)
+        verify(ipReleaseDemandService, times(0)).cancel(uuid, issuerUuid)
+    }
+
+    @Test @DisplayName("IP 할당 해제 신청 취소 - 신청이 존재하지 않을경우")
+    fun demandReleaseIpCancelFailureDemandNotExists() {
+        val uuid = Random.nextLong()
+
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(false)
+
+        val exception = assertThrows<UnknownDemandException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block() }
+
+        assert(exception.uuid == uuid)
         verify(ipReleaseDemandService, times(0)).cancel(uuid, issuerUuid)
     }
 
@@ -81,7 +92,8 @@ class IpReleaseDemandControllerTest {
         val uuid = Random.nextLong()
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatus.CREATED)
 
-        whenever(ipReleaseDemandQueryService.getDemandById(uuid)).thenReturn(dto)
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
+        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
 
         val exception = assertThrows<WrongAccessDemandException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block() }
 
