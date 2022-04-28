@@ -5,8 +5,10 @@ import com.iplease.server.ip.release.domain.request.exception.AlreadyDemandedAss
 import com.iplease.server.ip.release.domain.request.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.domain.request.data.table.IpReleaseDemandTable
 import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
+import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
+@Service
 class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleaseDemandRepository) : IpReleaseDemandService {
     override fun demand(assignedIpUuid: Long, issuerUuid: Long): Mono<IpReleaseDemandDto> {
         val table = IpReleaseDemandTable(0L, assignedIpUuid, issuerUuid, DemandStatus.CREATED)

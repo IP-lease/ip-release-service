@@ -10,14 +10,20 @@ import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.grpc.service.IpManageService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
+@RestController
+@RequestMapping("/api/v1/ip/release/demand")
 class IpReleaseDemandController(
     private val ipReleaseDemandService: IpReleaseDemandService,
     private val ipManageService: IpManageService
     ) {
     //IP 할당 해제 신청
+    @PostMapping("/{assignedIpUuid}")
     fun demandReleaseIp(@PathVariable assignedIpUuid: Long,
                         @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                         @RequestHeader("X-Login-Account-Role") role: Role
