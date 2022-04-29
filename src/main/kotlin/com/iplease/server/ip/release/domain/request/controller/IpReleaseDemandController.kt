@@ -8,6 +8,7 @@ import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.grpc.service.IpManageQueryService
 import com.iplease.server.ip.release.global.grpc.service.IpReleaseDemandQueryService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
@@ -37,7 +38,7 @@ class IpReleaseDemandController(
     }
 
     //IP 할당 해제 신청 취소
-    @PostMapping("/{uuid}")
+    @DeleteMapping("/{uuid}")
     fun cancelDemandReleaseIp(@PathVariable uuid: Long,
                               @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                               @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<Unit>> {
