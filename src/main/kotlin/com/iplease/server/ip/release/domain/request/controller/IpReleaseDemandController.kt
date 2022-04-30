@@ -5,8 +5,8 @@ import com.iplease.server.ip.release.domain.request.exception.*
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
-import com.iplease.server.ip.release.global.grpc.service.IpManageQueryService
-import com.iplease.server.ip.release.global.grpc.service.IpReleaseDemandQueryService
+import com.iplease.server.ip.release.global.request.service.IpManageQueryService
+import com.iplease.server.ip.release.global.request.service.IpReleaseDemandQueryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable

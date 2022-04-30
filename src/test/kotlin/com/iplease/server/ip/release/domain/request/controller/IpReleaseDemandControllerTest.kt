@@ -1,14 +1,14 @@
 package com.iplease.server.ip.release.domain.request.controller
 
 import com.iplease.server.ip.release.domain.request.data.dto.IpReleaseDemandDto
-import com.iplease.server.ip.release.global.grpc.service.IpManageQueryService
+import com.iplease.server.ip.release.global.request.service.IpManageQueryService
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
-import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatusType
 import com.iplease.server.ip.release.domain.request.exception.*
-import com.iplease.server.ip.release.global.grpc.service.IpReleaseDemandQueryService
+import com.iplease.server.ip.release.global.request.service.IpReleaseDemandQueryService
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
-import com.iplease.server.ip.release.global.grpc.dto.AssignedIp
+import com.iplease.server.ip.release.domain.request.data.dto.AssignedIpDto
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -30,7 +30,7 @@ class IpReleaseDemandControllerTest {
     private var assignedIpUuid by Delegates.notNull<Long>()
     private var issuerUuid by Delegates.notNull<Long>()
     private var uuid by Delegates.notNull<Long>()
-    private lateinit var assignedIp: AssignedIp
+    private lateinit var assignedIp: AssignedIpDto
 
     @BeforeEach
     fun setUp() {
@@ -41,7 +41,7 @@ class IpReleaseDemandControllerTest {
         assignedIpUuid = Random.nextLong()
         issuerUuid = Random.nextLong()
         uuid = Random.nextLong()
-        assignedIp = AssignedIp(assignedIpUuid, issuerUuid, Random.nextLong(), LocalDateTime.now())
+        assignedIp = AssignedIpDto(assignedIpUuid, issuerUuid, Random.nextLong(), LocalDateTime.now())
     }
 
     //IP 할당 해제 신청 취소 조건
@@ -50,7 +50,7 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid가 신청자의 uuid와 같아야 한다.
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
     fun demandReleaseIpCancelSuccess() {
-        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
+        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
         whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
@@ -65,7 +65,7 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 권한이 없을경우")
     fun demandReleaseIpCancelFailurePermissionDenied() {
-        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatus.CREATED)
+        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatusType.CREATED)
 
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
         whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
@@ -88,7 +88,7 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 요청자가 신청자가 아닐경우")
     fun demandReleaseIpCancelFailureNotOwner() {
-        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatus.CREATED)
+        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatusType.CREATED)
 
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
         whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
@@ -107,7 +107,7 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid (issuerUuid)가 해당 assignedIp 의 소유자(issuer)의 uuid와 같아야한다.
     @Test @DisplayName("IP 할당 해제 신청 - 신청 성공")
     fun demandReleaseIpSuccess() {
-        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
+        val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
         whenever(ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
         whenever(ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
@@ -120,7 +120,7 @@ class IpReleaseDemandControllerTest {
         assert(body.uuid == uuid)
         assert(body.assignedIpUuid == assignedIpUuid)
         assert(body.issuerUuid == issuerUuid)
-        assert(body.status == DemandStatus.CREATED)
+        assert(body.status == DemandStatusType.CREATED)
         verify(ipReleaseDemandService, times(1)).demand(assignedIpUuid, issuerUuid)
     }
 
