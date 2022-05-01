@@ -13,10 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDateTime
 import kotlin.properties.Delegates
@@ -52,8 +49,8 @@ class IpReleaseDemandControllerTest {
     fun demandReleaseIpCancelSuccess() {
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
-        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
-        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
+        whenever(ipReleaseDemandQueryService.getDemandByUuid(any())).thenReturn(dto.toMono())
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(any())).thenReturn(true.toMono())
         whenever(ipReleaseDemandService.cancel(uuid, issuerUuid)).thenReturn(Unit.toMono())
 
         val response = target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block()!!
@@ -67,8 +64,8 @@ class IpReleaseDemandControllerTest {
     fun demandReleaseIpCancelFailurePermissionDenied() {
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatusType.CREATED)
 
-        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
-        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid.toMono())).thenReturn(true.toMono())
+        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid.toMono())).thenReturn(dto.toMono())
 
         val exception = assertThrows<PermissionDeniedException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.GUEST).block() }
 
@@ -78,7 +75,7 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 신청이 존재하지 않을경우")
     fun demandReleaseIpCancelFailureDemandNotExists() {
-        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(false)
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(any())).thenReturn(false.toMono())
 
         val exception = assertThrows<UnknownDemandException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block() }
 
@@ -89,9 +86,10 @@ class IpReleaseDemandControllerTest {
     @Test @DisplayName("IP 할당 해제 신청 취소 - 요청자가 신청자가 아닐경우")
     fun demandReleaseIpCancelFailureNotOwner() {
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid * -1, DemandStatusType.CREATED)
+        val test = dto.toMono()
 
-        whenever(ipReleaseDemandQueryService.existsDemandByUuid(uuid)).thenReturn(true)
-        whenever(ipReleaseDemandQueryService.getDemandByUuid(uuid)).thenReturn(dto)
+        whenever(ipReleaseDemandQueryService.existsDemandByUuid(any())).thenReturn(true.toMono())
+        whenever(ipReleaseDemandQueryService.getDemandByUuid(any())).thenReturn(test)
 
         val exception = assertThrows<WrongAccessDemandException> { target.cancelDemandReleaseIp(uuid, issuerUuid, Role.ADMINISTRATOR).block() }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @RestController
 @RequestMapping("/api/v1/ip/release/demand")
@@ -28,46 +29,53 @@ class IpReleaseDemandController(
     fun demandReleaseIp(@PathVariable assignedIpUuid: Long,
                         @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                         @RequestHeader("X-Login-Account-Role") role: Role
-    ): Mono<ResponseEntity<DemandReleaseIpResponse>> {
+    ): Mono<ResponseEntity<DemandReleaseIpResponse>> =
         checkPermission(role, Permission.IP_RELEASE_DEMAND)
-        checkAssignedIpExists(assignedIpUuid)
-        checkAssignedIpAccess(assignedIpUuid, issuerUuid)
-        return ipReleaseDemandService.demand(assignedIpUuid, issuerUuid)
+            .flatMap { checkAssignedIpExists(assignedIpUuid) }
+            .flatMap { checkAssignedIpAccess(assignedIpUuid, issuerUuid) }
+            .flatMap { ipReleaseDemandService.demand(assignedIpUuid, issuerUuid) }
             .map { DemandReleaseIpResponse(it.uuid, it.assignedIpUuid, it.issuerUuid, it.status) }
             .map { ResponseEntity.ok(it) }
-    }
 
     //IP 할당 해제 신청 취소
     @DeleteMapping("/{uuid}")
     fun cancelDemandReleaseIp(@PathVariable uuid: Long,
                               @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
-                              @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<Unit>> {
+                              @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<Unit>> =
         checkPermission(role, Permission.IP_RELEASE_DEMAND_CANCEL)
-        checkDemandExists(uuid)
-        checkDemandAccess(uuid, issuerUuid)
-        return ipReleaseDemandService.cancel(uuid, issuerUuid)
+            .flatMap { checkDemandExists(uuid) }
+            .flatMap { checkDemandAccess(uuid, issuerUuid) }
+            .flatMap { ipReleaseDemandService.cancel(uuid, issuerUuid) }
             .map { ResponseEntity.ok(it) }
-    }
 
-    private fun checkDemandExists(uuid: Long) {
-        if(!ipReleaseDemandQueryService.existsDemandByUuid(uuid)) throw UnknownDemandException(uuid)
-    }
 
-    private fun checkDemandAccess(uuid: Long, issuerUuid: Long) {
-        val demand = ipReleaseDemandQueryService.getDemandByUuid(uuid)
-        if(demand.issuerUuid != issuerUuid) throw WrongAccessDemandException(uuid, issuerUuid)
-    }
+    private fun checkDemandExists(uuid: Long) =
+        ipReleaseDemandQueryService.existsDemandByUuid(uuid.toMono())
+            .flatMap {
+                if(it) Mono.just(Unit)
+                else Mono.defer { Mono.error(UnknownDemandException(uuid)) }
+            }
 
-    private fun checkPermission(role: Role, permission: Permission) {
-        if(!role.hasPermission(permission)) throw PermissionDeniedException(permission)
-    }
+    private fun checkDemandAccess(uuid: Long, issuerUuid: Long) =
+        ipReleaseDemandQueryService.getDemandByUuid(uuid.toMono())
+            .map { it.issuerUuid }
+            .flatMap {
+                if(it == issuerUuid) Mono.just(Unit)
+                else Mono.defer { Mono.error(WrongAccessDemandException(uuid, issuerUuid)) }
+            }
 
-    private fun checkAssignedIpExists(assignedIpUuid: Long) {
-        if (!ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)) throw UnknownAssignedIpException(assignedIpUuid)
-    }
+    private fun checkPermission(role: Role, permission: Permission) =
+        if (role.hasPermission(permission)) Mono.just(Unit)
+        else Mono.defer { Mono.error(PermissionDeniedException(permission)) }
 
-    private fun checkAssignedIpAccess(assignedIpUuid: Long, issuerUuid: Long) {
-        val assignedIp = ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)
-        if(assignedIp.issuerUuid != issuerUuid) throw WrongAccessAssignedIpException(assignedIpUuid, issuerUuid)
-    }
+    private fun checkAssignedIpExists(assignedIpUuid: Long) =
+        if (ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)) Mono.just(Unit)
+        else Mono.defer { Mono.error(UnknownAssignedIpException(assignedIpUuid)) }
+
+    private fun checkAssignedIpAccess(assignedIpUuid: Long, issuerUuid: Long) =
+        ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)
+            .let {
+                if(it.issuerUuid == issuerUuid) Mono.just(Unit)
+                else Mono.defer { Mono.error(WrongAccessAssignedIpException(assignedIpUuid, issuerUuid)) }
+            }
 }
