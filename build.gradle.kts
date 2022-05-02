@@ -25,7 +25,8 @@ repositories {
 extra["springCloudVersion"] = "2021.0.1"
 
 dependencies {
-    implementation(files("libs/proto-lib-0.0.1-SNAPSHOT.jar"))
+    implementation(platform("com.linecorp.armeria:armeria-bom:1.16.0"))
+    implementation(files("libs/proto-lib-0.0.2-alpha.jar"))
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
@@ -52,18 +53,16 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
     
     implementation("com.linecorp.armeria:armeria")
-    implementation("com.linecorp.armeria:armeria-grpc:1.16.0")
+    implementation("com.linecorp.armeria:armeria-grpc")
     implementation("com.salesforce.servicelibs:reactor-grpc-stub:1.2.3")
     implementation("io.projectreactor:reactor-core:3.4.16")
     compileOnly("javax.annotation:javax.annotation-api:1.3.2")
-    runtimeOnly("org.slf4j:slf4j-simple:1.7.36")
-    testImplementation("com.linecorp.armeria:armeria-junit5:1.16.0")
+    testImplementation("com.linecorp.armeria:armeria-junit5")
     implementation("io.grpc:grpc-protobuf:1.45.1")
     implementation("io.grpc:grpc-stub:1.45.1")
     compileOnly("jakarta.annotation:jakarta.annotation-api:2.0.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.11")
-    runtimeOnly("org.slf4j:log4j-over-slf4j:1.7.36")
-    implementation("com.linecorp.armeria:armeria-spring-boot-webflux-starter:0.99.7")
+    implementation("com.linecorp.armeria:armeria-spring-boot2-webflux-starter")
 }
 
 dependencyManagement {
