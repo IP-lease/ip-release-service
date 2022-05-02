@@ -107,8 +107,8 @@ class IpReleaseDemandControllerTest {
     fun demandReleaseIpSuccess() {
         val dto = IpReleaseDemandDto(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
-        whenever(ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
-        whenever(ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
+        whenever(ipManageQueryService.existsAssignedIpByUuid(any())).thenReturn(true.toMono())
+        whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(assignedIp.toMono())
         whenever(ipReleaseDemandService.demand(assignedIpUuid, issuerUuid)).thenReturn(dto.toMono())
 
         val response = target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block()!!
@@ -124,8 +124,8 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 - 권한이 없을경우")
     fun demandReleaseIpFailurePermissionDenied() {
-        whenever(ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
-        whenever(ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
+        whenever(ipManageQueryService.existsAssignedIpByUuid(any())).thenReturn(true.toMono())
+        whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(assignedIp.toMono())
 
         val exception = assertThrows<PermissionDeniedException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.GUEST).block() }
 
@@ -135,8 +135,8 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 - AssignedIp가 존재하지 않을 경우")
     fun demandReleaseIpFailureNotExists() {
-        whenever(ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(false)
-        whenever(ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp)
+        whenever(ipManageQueryService.existsAssignedIpByUuid(any())).thenReturn(false.toMono())
+        whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(assignedIp.toMono())
 
         val exception = assertThrows<UnknownAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block() }
 
@@ -146,8 +146,8 @@ class IpReleaseDemandControllerTest {
 
     @Test @DisplayName("IP 할당 해제 신청 - 요청자가 AssignedIp 의 소유자가 아닐경우")
     fun demandReleaseIpFailureNotOwner() {
-        whenever(ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)).thenReturn(true)
-        whenever(ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)).thenReturn(assignedIp.copy(issuerUuid = issuerUuid * -1))
+        whenever(ipManageQueryService.existsAssignedIpByUuid(any())).thenReturn(true.toMono())
+        whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(assignedIp.copy(issuerUuid = issuerUuid * -1).toMono())
 
         val exception = assertThrows<WrongAccessAssignedIpException> { target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block() }
 
