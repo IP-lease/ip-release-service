@@ -6,13 +6,12 @@ import com.iplease.lib.ip.release.AssignedIp
 import com.iplease.lib.ip.release.ReactorIpManageQueryServiceGrpc.ReactorIpManageQueryServiceStub
 import com.iplease.server.ip.release.domain.request.data.dto.AssignedIpDto
 import com.iplease.server.ip.release.global.request.service.IpManageQueryService
-import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-@Service
+//todo @Service
 class GrpcIpManageQueryService(
     private val reactorIpManageQueryServiceStub: ReactorIpManageQueryServiceStub
 ): IpManageQueryService {
