@@ -69,12 +69,14 @@ class IpReleaseDemandController(
         else Mono.defer { Mono.error(PermissionDeniedException(permission)) }
 
     private fun checkAssignedIpExists(assignedIpUuid: Long) =
-        if (ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid)) Mono.just(Unit)
-        else Mono.defer { Mono.error(UnknownAssignedIpException(assignedIpUuid)) }
+        ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid.toMono()).flatMap {
+            if (it) Mono.just(Unit)
+            else Mono.defer { Mono.error(UnknownAssignedIpException(assignedIpUuid)) }
+        }
 
     private fun checkAssignedIpAccess(assignedIpUuid: Long, issuerUuid: Long) =
-        ipManageQueryService.getAssignedIpByUuid(assignedIpUuid)
-            .let {
+        ipManageQueryService.getAssignedIpByUuid(assignedIpUuid.toMono())
+            .flatMap {
                 if(it.issuerUuid == issuerUuid) Mono.just(Unit)
                 else Mono.defer { Mono.error(WrongAccessAssignedIpException(assignedIpUuid, issuerUuid)) }
             }
