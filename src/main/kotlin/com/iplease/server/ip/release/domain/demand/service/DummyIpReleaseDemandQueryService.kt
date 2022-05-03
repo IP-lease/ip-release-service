@@ -2,7 +2,7 @@ package com.iplease.server.ip.release.domain.demand.service
 
 import com.iplease.server.ip.release.domain.demand.data.dto.IpReleaseDemandDto
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
-import com.iplease.server.ip.release.global.request.service.IpReleaseDemandQueryService
+import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 

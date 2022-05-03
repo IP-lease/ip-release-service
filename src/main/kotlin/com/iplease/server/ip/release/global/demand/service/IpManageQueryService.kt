@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.request.service
+package com.iplease.server.ip.release.global.demand.service
 
 import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
 import reactor.core.publisher.Mono

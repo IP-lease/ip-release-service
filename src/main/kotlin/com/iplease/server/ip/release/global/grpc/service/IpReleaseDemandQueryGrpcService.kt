@@ -7,7 +7,7 @@ import com.iplease.lib.ip.release.IpReleaseDemand
 import com.iplease.lib.ip.release.ReactorIpReleaseDemandQueryServiceGrpc.IpReleaseDemandQueryServiceImplBase
 import com.iplease.server.ip.release.domain.demand.data.dto.IpReleaseDemandDto
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
-import com.iplease.server.ip.release.global.request.service.IpReleaseDemandQueryService
+import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 

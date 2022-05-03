@@ -5,7 +5,7 @@ import com.google.protobuf.Timestamp
 import com.iplease.lib.ip.release.AssignedIp
 import com.iplease.lib.ip.release.ReactorIpManageQueryServiceGrpc.ReactorIpManageQueryServiceStub
 import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
-import com.iplease.server.ip.release.global.request.service.IpManageQueryService
+import com.iplease.server.ip.release.global.demand.service.IpManageQueryService
 import reactor.core.publisher.Mono
 import java.time.Instant
 import java.time.LocalDateTime
