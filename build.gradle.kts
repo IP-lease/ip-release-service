@@ -25,14 +25,13 @@ repositories {
 extra["springCloudVersion"] = "2021.0.1"
 
 dependencies {
-    implementation(platform("com.linecorp.armeria:armeria-bom:1.16.0"))
     implementation(files("libs/proto-lib-0.0.2-alpha.jar"))
+
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
@@ -41,28 +40,32 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.7")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.amqp:spring-rabbit-test")
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
     runtimeOnly("mysql:mysql-connector-java")
     runtimeOnly("dev.miku:r2dbc-mysql")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.springframework.amqp:spring-rabbit-test")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-    
+
+    implementation(platform("com.linecorp.armeria:armeria-bom:1.16.0"))
     implementation("com.linecorp.armeria:armeria")
     implementation("com.linecorp.armeria:armeria-grpc")
-    implementation("com.salesforce.servicelibs:reactor-grpc-stub:1.2.3")
-    implementation("io.projectreactor:reactor-core:3.4.16")
-    compileOnly("javax.annotation:javax.annotation-api:1.3.2")
     testImplementation("com.linecorp.armeria:armeria-junit5")
+    implementation("com.linecorp.armeria:armeria-spring-boot2-webflux-starter")
+
     implementation("io.grpc:grpc-protobuf:1.45.1")
     implementation("io.grpc:grpc-stub:1.45.1")
+    implementation("com.salesforce.servicelibs:reactor-grpc-stub:1.2.3")
+    compileOnly("javax.annotation:javax.annotation-api:1.3.2")
     compileOnly("jakarta.annotation:jakarta.annotation-api:2.0.0")
     runtimeOnly("ch.qos.logback:logback-classic:1.2.11")
-    implementation("com.linecorp.armeria:armeria-spring-boot2-webflux-starter")
+
+    implementation("io.projectreactor:reactor-core")
+    testImplementation("io.projectreactor:reactor-test")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 }
 
 dependencyManagement {
