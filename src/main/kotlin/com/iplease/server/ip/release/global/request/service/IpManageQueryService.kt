@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.global.request.service
 
-import com.iplease.server.ip.release.domain.request.data.dto.AssignedIpDto
+import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
 import reactor.core.publisher.Mono
 
 interface IpManageQueryService {

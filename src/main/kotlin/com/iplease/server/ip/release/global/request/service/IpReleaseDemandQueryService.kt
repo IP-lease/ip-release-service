@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.global.request.service
 
-import com.iplease.server.ip.release.domain.request.data.dto.IpReleaseDemandDto
+import com.iplease.server.ip.release.domain.demand.data.dto.IpReleaseDemandDto
 import reactor.core.publisher.Mono
 
 interface IpReleaseDemandQueryService {
