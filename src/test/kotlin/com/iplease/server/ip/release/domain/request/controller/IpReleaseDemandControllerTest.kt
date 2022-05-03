@@ -9,6 +9,8 @@ import com.iplease.server.ip.release.global.request.service.IpReleaseDemandQuery
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.domain.request.data.dto.AssignedIpDto
+import com.iplease.server.ip.release.global.event.service.EventPublishService
+import com.iplease.server.ip.release.global.event.type.Event
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -24,6 +26,7 @@ class IpReleaseDemandControllerTest {
     private lateinit var ipReleaseDemandService: IpReleaseDemandService
     private lateinit var ipReleaseDemandQueryService: IpReleaseDemandQueryService
     private lateinit var ipManageQueryService: IpManageQueryService
+    private lateinit var eventPublishService: EventPublishService
     private var assignedIpUuid by Delegates.notNull<Long>()
     private var issuerUuid by Delegates.notNull<Long>()
     private var uuid by Delegates.notNull<Long>()
@@ -34,7 +37,15 @@ class IpReleaseDemandControllerTest {
         ipReleaseDemandService = mock()
         ipReleaseDemandQueryService = mock()
         ipManageQueryService = mock()
-        target = IpReleaseDemandController(ipReleaseDemandService, ipReleaseDemandQueryService, ipManageQueryService)
+        eventPublishService = mock()
+
+        target = IpReleaseDemandController(
+            ipReleaseDemandService,
+            ipReleaseDemandQueryService,
+            ipManageQueryService,
+            eventPublishService
+        )
+
         assignedIpUuid = Random.nextLong()
         issuerUuid = Random.nextLong()
         uuid = Random.nextLong()
@@ -110,6 +121,7 @@ class IpReleaseDemandControllerTest {
         whenever(ipManageQueryService.existsAssignedIpByUuid(any())).thenReturn(true.toMono())
         whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(assignedIp.toMono())
         whenever(ipReleaseDemandService.demand(assignedIpUuid, issuerUuid)).thenReturn(dto.toMono())
+        whenever(eventPublishService.publish(Event.IP_RELEASE_DEMAND_ADD.routingKey, dto)).thenReturn(dto)
 
         val response = target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block()!!
         val body = response.body!!
@@ -120,6 +132,7 @@ class IpReleaseDemandControllerTest {
         assert(body.issuerUuid == issuerUuid)
         assert(body.status == DemandStatusType.CREATED)
         verify(ipReleaseDemandService, times(1)).demand(assignedIpUuid, issuerUuid)
+        verify(eventPublishService, times(1)).publish(Event.IP_RELEASE_DEMAND_ADD.routingKey, dto)
     }
 
     @Test @DisplayName("IP 할당 해제 신청 - 권한이 없을경우")

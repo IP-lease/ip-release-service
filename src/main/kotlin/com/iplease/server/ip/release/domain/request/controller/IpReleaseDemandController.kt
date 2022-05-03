@@ -3,6 +3,8 @@ package com.iplease.server.ip.release.domain.request.controller
 import com.iplease.server.ip.release.domain.request.data.response.DemandReleaseIpResponse
 import com.iplease.server.ip.release.domain.request.exception.*
 import com.iplease.server.ip.release.domain.request.service.IpReleaseDemandService
+import com.iplease.server.ip.release.global.event.service.EventPublishService
+import com.iplease.server.ip.release.global.event.type.Event
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.global.request.service.IpManageQueryService
@@ -22,8 +24,9 @@ import reactor.kotlin.core.publisher.toMono
 class IpReleaseDemandController(
     private val ipReleaseDemandService: IpReleaseDemandService,
     private val ipReleaseDemandQueryService: IpReleaseDemandQueryService,
-    private val ipManageQueryService: IpManageQueryService
-    ) {
+    private val ipManageQueryService: IpManageQueryService,
+    private val eventPublishService: EventPublishService
+) {
     //IP 할당 해제 신청
     @PostMapping("/{assignedIpUuid}")
     fun demandReleaseIp(@PathVariable assignedIpUuid: Long,
@@ -34,8 +37,10 @@ class IpReleaseDemandController(
             .flatMap { checkAssignedIpExists(assignedIpUuid) }
             .flatMap { checkAssignedIpAccess(assignedIpUuid, issuerUuid) }
             .flatMap { ipReleaseDemandService.demand(assignedIpUuid, issuerUuid) }
-            .map { DemandReleaseIpResponse(it.uuid, it.assignedIpUuid, it.issuerUuid, it.status) }
-            .map { ResponseEntity.ok(it) }
+            .map { eventPublishService.publish(Event.IP_RELEASE_DEMAND_ADD.routingKey, it) }
+            .map {
+                DemandReleaseIpResponse(it.uuid, it.assignedIpUuid, it.issuerUuid, it.status)
+                    .let { response -> ResponseEntity.ok(response) } }
 
     //IP 할당 해제 신청 취소
     @DeleteMapping("/{uuid}")
