@@ -3,7 +3,7 @@ package com.iplease.server.ip.release.domain.request.service
 import com.iplease.server.ip.release.domain.request.exception.AlreadyDemandedAssignedIpException
 import com.iplease.server.ip.release.domain.request.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.domain.request.data.table.IpReleaseDemandTable
-import com.iplease.server.ip.release.domain.request.data.type.DemandStatus
+import com.iplease.server.ip.release.domain.request.data.type.DemandStatusType
 import com.iplease.server.ip.release.domain.request.exception.NotCancelableDemandException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -35,7 +35,7 @@ class IpReleaseDemandServiceImplTest {
     //해당 신청이 취소 가능한 상태여야한다.
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
     fun demandReleaseIpCancelSuccess() {
-        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
+        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
         whenever(repository.findById(uuid)).thenReturn(table.toMono())
         whenever(repository.deleteById(uuid)).thenReturn(Mono.just("").then())
@@ -47,7 +47,7 @@ class IpReleaseDemandServiceImplTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소할 수 없는 신청일 경우")
     fun demandReleaseIpCancelFailureAlreadyCompleted() {
-        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatus.COMPLETE)
+        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatusType.COMPLETE)
 
         whenever(repository.findById(uuid)).thenReturn(table.toMono())
 
@@ -61,7 +61,7 @@ class IpReleaseDemandServiceImplTest {
     //동일한 assignedIp 로 진행중인 해제신청이 없어야 한다.
     @Test @DisplayName("IP 할당 해제 신청 - 신청 성공")
     fun demandReleaseIpSuccess() {
-        val table = IpReleaseDemandTable(0L, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
+        val table = IpReleaseDemandTable(0L, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
         whenever(repository.save(table)).thenReturn(table.copy(uuid = uuid).toMono())
         whenever(repository.existsByAssignedIpUuid(assignedIpUuid)).thenReturn(false.toMono())
 
@@ -76,7 +76,7 @@ class IpReleaseDemandServiceImplTest {
 
     @Test @DisplayName("IP 할당 해제 신청 - 이미 해제신청이 진행중일 경우")
     fun demandReleaseIpFailureAlreadyDemanded() {
-        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatus.CREATED)
+        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
         whenever(repository.existsByAssignedIpUuid(assignedIpUuid)).thenReturn(true.toMono())
 
