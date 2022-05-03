@@ -25,7 +25,7 @@ repositories {
 extra["springCloudVersion"] = "2021.0.1"
 
 dependencies {
-    implementation(files("libs/proto-lib-0.0.2-alpha.jar"))
+    implementation(files("libs/proto-lib-0.0.1-SNAPSHOT.jar"))
 
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
@@ -44,6 +44,7 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.amqp:spring-rabbit-test")
+
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")
     runtimeOnly("mysql:mysql-connector-java")
