@@ -66,18 +66,20 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid가 신청자의 uuid와 같아야 한다. -> PolicyCheckService 에 위임
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
     fun demandReleaseIpCancelSuccess() {
-        val dto = IpReleaseDemandDto(demandUuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
+        val role = Role.values().filter { it.hasPermission(Permission.IP_RELEASE_DEMAND_CANCEL) }.random()
+        val status = DemandStatusType.values().filter { it.isCancelable }.random()
+        val dto = IpReleaseDemandDto(demandUuid, assignedIpUuid, issuerUuid, status)
 
         whenever(ipReleaseDemandQueryService.getDemandByUuid(any())).thenReturn(dto.toMono())
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(any())).thenReturn(true.toMono())
         whenever(ipReleaseDemandService.cancel(demandUuid, issuerUuid)).thenReturn(Unit.toMono())
 
-        val response = target.cancelDemandReleaseIp(demandUuid, issuerUuid, Role.ADMINISTRATOR).block()!!
+        val response = target.cancelDemandReleaseIp(demandUuid, issuerUuid, role).block()!!
 
         assert(response.statusCode.is2xxSuccessful)
         assert(response.body==Unit)
         verify(ipReleaseDemandService, times(1)).cancel(demandUuid, issuerUuid)
-        verify(policyCheckService, times(1)).checkPermission(Role.ADMINISTRATOR, Permission.IP_RELEASE_DEMAND_CANCEL)
+        verify(policyCheckService, times(1)).checkPermission(role, Permission.IP_RELEASE_DEMAND_CANCEL)
         verify(policyCheckService, times(1)).checkDemandExists(demandUuid)
         verify(policyCheckService, times(1)).checkDemandAccess(demandUuid, issuerUuid)
     }
@@ -89,6 +91,7 @@ class IpReleaseDemandControllerTest {
     //요청자의 uuid (issuerUuid)가 해당 assignedIp 의 소유자(issuer)의 uuid와 같아야한다. -> PolicyCheckService 에 위임
     @Test @DisplayName("IP 할당 해제 신청 - 신청 성공")
     fun demandReleaseIpSuccess() {
+        val role = Role.values().filter { it.hasPermission(Permission.IP_RELEASE_DEMAND) }.random()
         val dto = IpReleaseDemandDto(demandUuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
 
         whenever(ipManageQueryService.existsAssignedIpByUuid(any())).thenReturn(true.toMono())
@@ -96,7 +99,7 @@ class IpReleaseDemandControllerTest {
         whenever(ipReleaseDemandService.demand(assignedIpUuid, issuerUuid)).thenReturn(dto.toMono())
         whenever(eventPublishService.publish(Event.IP_RELEASE_DEMAND_ADD.routingKey, dto)).thenReturn(dto)
 
-        val response = target.demandReleaseIp(assignedIpUuid, issuerUuid, Role.ADMINISTRATOR).block()!!
+        val response = target.demandReleaseIp(assignedIpUuid, issuerUuid, role).block()!!
         val body = response.body!!
 
         assert(response.statusCode.is2xxSuccessful)
@@ -106,7 +109,7 @@ class IpReleaseDemandControllerTest {
         assert(body.status == DemandStatusType.CREATED)
         verify(ipReleaseDemandService, times(1)).demand(assignedIpUuid, issuerUuid)
         verify(eventPublishService, times(1)).publish(Event.IP_RELEASE_DEMAND_ADD.routingKey, dto)
-        verify(policyCheckService, times(1)).checkPermission(Role.ADMINISTRATOR, Permission.IP_RELEASE_DEMAND)
+        verify(policyCheckService, times(1)).checkPermission(role, Permission.IP_RELEASE_DEMAND)
         verify(policyCheckService, times(1)).checkAssignedIpExists(assignedIpUuid)
         verify(policyCheckService, times(1)).checkAssignedIpAccess(assignedIpUuid, issuerUuid)
     }

@@ -2,6 +2,7 @@ package com.iplease.server.ip.release.domain.admin.controller
 
 import com.iplease.server.ip.release.domain.admin.dto.IpReleaseAcceptDto
 import com.iplease.server.ip.release.domain.admin.service.IpReleaseAdminService
+import com.iplease.server.ip.release.global.common.type.Permission
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
@@ -55,12 +56,13 @@ class IpReleaseAdminControllerTest {
     @Test @DisplayName("IP 할당 해제 수락 - 수락 성공")
     fun acceptReleaseIpSuccess() {
         val dto = IpReleaseAcceptDto(demandUuid, operatorUuid)
+        val role = Role.values().filter { it.hasPermission(Permission.IP_RELEASE_ACCEPT) }.random()
 
         whenever(ipReleaseDemandQueryService.existsDemandByUuid(any())).thenReturn(true.toMono())
         whenever(ipReleaseAdminService.acceptDemand(demandUuid, operatorUuid)).thenReturn(dto.toMono())
         whenever(eventPublishService.publish(Event.IP_RELEASED.routingKey, dto)).thenReturn(dto)
 
-        target.acceptReleaseIp(demandUuid, operatorUuid, Role.ADMINISTRATOR).block()!!
+        target.acceptReleaseIp(demandUuid, operatorUuid, role).block()!!
 
         verify(ipReleaseAdminService, times(1)).acceptDemand(demandUuid, operatorUuid)
         verify(eventPublishService, times(1)).publish(Event.IP_RELEASED.routingKey, dto)
