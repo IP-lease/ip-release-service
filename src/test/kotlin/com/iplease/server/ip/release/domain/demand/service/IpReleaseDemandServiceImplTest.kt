@@ -1,7 +1,7 @@
 package com.iplease.server.ip.release.domain.demand.service
 
 import com.iplease.server.ip.release.domain.demand.exception.AlreadyDemandedAssignedIpException
-import com.iplease.server.ip.release.domain.demand.repository.IpReleaseDemandRepository
+import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.domain.demand.data.table.IpReleaseDemandTable
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
 import com.iplease.server.ip.release.domain.demand.exception.NotCancelableDemandException
@@ -35,7 +35,8 @@ class IpReleaseDemandServiceImplTest {
     //해당 신청이 취소 가능한 상태여야한다.
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소 성공")
     fun demandReleaseIpCancelSuccess() {
-        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
+        val status = DemandStatusType.values().filter { it.isCancelable }.random()
+        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, status)
 
         whenever(repository.findById(uuid)).thenReturn(table.toMono())
         whenever(repository.deleteById(uuid)).thenReturn(Mono.just("").then())
@@ -47,7 +48,8 @@ class IpReleaseDemandServiceImplTest {
 
     @Test @DisplayName("IP 할당 해제 신청 취소 - 취소할 수 없는 신청일 경우")
     fun demandReleaseIpCancelFailureAlreadyCompleted() {
-        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, DemandStatusType.COMPLETE)
+        val status = DemandStatusType.values().filter { !it.isCancelable }.random()
+        val table = IpReleaseDemandTable(uuid, assignedIpUuid, issuerUuid, status)
 
         whenever(repository.findById(uuid)).thenReturn(table.toMono())
 

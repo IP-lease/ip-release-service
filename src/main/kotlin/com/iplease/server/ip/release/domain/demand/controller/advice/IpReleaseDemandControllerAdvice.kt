@@ -3,6 +3,8 @@ package com.iplease.server.ip.release.domain.demand.controller.advice
 import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.domain.demand.exception.*
+import com.iplease.server.ip.release.global.demand.exception.UnknownDemandException
+import com.iplease.server.ip.release.global.common.exception.PermissionDeniedException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice

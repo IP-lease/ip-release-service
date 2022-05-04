@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.config
+package com.iplease.server.ip.release.global.common.config
 
 import com.iplease.lib.ip.release.IpReleaseDemandQueryServiceGrpc
 import com.iplease.server.ip.release.global.grpc.service.IpReleaseDemandQueryGrpcService
