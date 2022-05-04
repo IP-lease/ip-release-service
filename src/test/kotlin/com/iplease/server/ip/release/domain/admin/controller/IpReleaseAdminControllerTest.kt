@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.admin.controller
 
-import com.iplease.server.ip.release.domain.admin.dto.IpReleaseAcceptDto
+import com.iplease.server.ip.release.domain.admin.data.dto.IpReleaseAcceptDto
 import com.iplease.server.ip.release.domain.admin.service.IpReleaseAdminService
 import com.iplease.server.ip.release.global.common.type.Permission
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService

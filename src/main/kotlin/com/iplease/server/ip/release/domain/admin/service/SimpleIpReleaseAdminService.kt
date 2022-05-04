@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.admin.service
 
-import com.iplease.server.ip.release.domain.admin.dto.IpReleaseAcceptDto
+import com.iplease.server.ip.release.domain.admin.data.dto.IpReleaseAcceptDto
 import com.iplease.server.ip.release.domain.admin.exception.NotAcceptableDemandException
 import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
 import org.springframework.stereotype.Service

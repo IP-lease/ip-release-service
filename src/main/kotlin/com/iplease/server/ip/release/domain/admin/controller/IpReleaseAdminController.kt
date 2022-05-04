@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.admin.controller
 
-import com.iplease.server.ip.release.domain.admin.response.AcceptReleaseIpResponse
+import com.iplease.server.ip.release.domain.admin.data.response.AcceptReleaseIpResponse
 import com.iplease.server.ip.release.domain.admin.service.IpReleaseAdminService
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
