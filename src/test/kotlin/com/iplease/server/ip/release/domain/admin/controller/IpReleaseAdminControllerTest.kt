@@ -6,9 +6,9 @@ import com.iplease.server.ip.release.global.demand.exception.UnknownDemandExcept
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
-import com.iplease.server.ip.release.global.exception.PermissionDeniedException
-import com.iplease.server.ip.release.global.type.Permission
-import com.iplease.server.ip.release.global.type.Role
+import com.iplease.server.ip.release.global.common.exception.PermissionDeniedException
+import com.iplease.server.ip.release.global.common.type.Permission
+import com.iplease.server.ip.release.global.common.type.Role
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

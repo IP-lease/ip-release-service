@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.type
+package com.iplease.server.ip.release.global.common.type
 
 enum class Permission {
     IP_RELEASE_DEMAND, IP_RELEASE_DEMAND_CANCEL,

@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.type
+package com.iplease.server.ip.release.global.common.type
 
 enum class Role(
     vararg roles: Permission
