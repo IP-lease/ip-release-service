@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.domain.demand.exception
+package com.iplease.server.ip.release.global.exception
 
 import com.iplease.server.ip.release.global.type.Permission
 

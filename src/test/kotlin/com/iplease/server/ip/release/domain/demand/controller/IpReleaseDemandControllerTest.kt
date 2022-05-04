@@ -9,8 +9,10 @@ import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryS
 import com.iplease.server.ip.release.global.type.Permission
 import com.iplease.server.ip.release.global.type.Role
 import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
+import com.iplease.server.ip.release.global.demand.exception.UnknownDemandException
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
+import com.iplease.server.ip.release.global.exception.PermissionDeniedException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
