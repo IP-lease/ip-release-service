@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service
 class RabbitMqEventPublishService(
     val rabbitTemplate: RabbitTemplate
 ): EventPublishService {
+    companion object { const val EXCHANGE_NAME = "iplease.event" }
     override fun <T: Any> publish(routingKey: String, data: T): T =
         ObjectMapper().writeValueAsString(data)
-            .let { rabbitTemplate.convertAndSend(routingKey, it) }
+            .let { rabbitTemplate.convertAndSend(EXCHANGE_NAME, routingKey, it) }
             .let { data }
 }
