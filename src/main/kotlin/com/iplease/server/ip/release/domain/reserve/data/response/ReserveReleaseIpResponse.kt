@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.domain.reserve.response
+package com.iplease.server.ip.release.domain.reserve.data.response
 
 import java.time.LocalDate
 

@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.reserve.controller
 
-import com.iplease.server.ip.release.domain.reserve.response.ReserveReleaseIpResponse
+import com.iplease.server.ip.release.domain.reserve.data.response.ReserveReleaseIpResponse
 import com.iplease.server.ip.release.domain.reserve.service.IpReleaseReserveService
 import com.iplease.server.ip.release.global.common.type.Permission
 import com.iplease.server.ip.release.global.common.type.Role
