@@ -29,44 +29,34 @@ class SimplePolicyCheckService(
 
     override fun checkDemandExists(demandUuid: Long) =
         ipReleaseDemandQueryService.existsDemandByUuid(demandUuid.toMono())
-            .flatMap {
-                if(it) Mono.just(Any())
-                else Mono.defer { Mono.error(UnknownDemandException(demandUuid)) }
-            }
+            .checkTemplate(UnknownDemandException(demandUuid))
 
     override fun checkDemandAccess(demandUuid: Long, accessorUuid: Long) =
         ipReleaseDemandQueryService.getDemandByUuid(demandUuid.toMono())
-            .map { it.issuerUuid }
-            .flatMap {
-                if(it == accessorUuid) Mono.just(Any())
-                else Mono.defer { Mono.error(WrongAccessDemandException(demandUuid, accessorUuid)) }
-            }
+            .map { it.issuerUuid == accessorUuid }
+            .checkTemplate(WrongAccessDemandException(demandUuid, accessorUuid))
 
     override fun checkAssignedIpExists(assignedIpUuid: Long) =
-        ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid.toMono()).flatMap {
-            if (it) Mono.just(Any())
-            else Mono.defer { Mono.error(UnknownAssignedIpException(assignedIpUuid)) }
-        }
+        ipManageQueryService.existsAssignedIpByUuid(assignedIpUuid.toMono())
+            .checkTemplate(UnknownAssignedIpException(assignedIpUuid))
 
     override fun checkAssignedIpAccess(assignedIpUuid: Long, accessorUuid: Long) =
         ipManageQueryService.getAssignedIpByUuid(assignedIpUuid.toMono())
-            .flatMap {
-                if(it.issuerUuid == accessorUuid) Mono.just(Any())
-                else Mono.defer { Mono.error(WrongAccessAssignedIpException(assignedIpUuid, accessorUuid)) }
-            }
+            .map { it.issuerUuid == accessorUuid }
+            .checkTemplate(WrongAccessAssignedIpException(assignedIpUuid, accessorUuid))
 
     override fun checkReserveExists(reserveUuid: Long) =
         ipReleaseReserveQueryService.existsReserveByUuid(reserveUuid.toMono())
-            .flatMap {
-                if(it) Mono.just(Any())
-                else Mono.defer { Mono.error(UnknownReserveException(reserveUuid)) }
-            }
+            .checkTemplate(UnknownReserveException(reserveUuid))
 
     override fun checkReserveAccess(reserveUuid: Long, accessorUuid: Long) =
         ipReleaseReserveQueryService.getReserveByUuid(reserveUuid.toMono())
-            .map { it.issuerUuid }
-            .flatMap {
-                if(it == accessorUuid) Mono.just(Any())
-                else Mono.defer { Mono.error(WrongAccessReserveException(reserveUuid, accessorUuid)) }
-            }
+            .map { it.issuerUuid == accessorUuid }
+            .checkTemplate(WrongAccessReserveException(reserveUuid, accessorUuid))
+
+    private fun <T: RuntimeException> Mono<Boolean>.checkTemplate(onFailed : T, failedCondition: Boolean = false): Mono<Any> =
+        flatMap {
+            if (it == failedCondition) Mono.error(onFailed)
+            else Mono.just(Any())
+        }
 }
