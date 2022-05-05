@@ -1,7 +1,7 @@
 package com.iplease.server.ip.release.domain.demand.service
 
 import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
-import com.iplease.server.ip.release.global.demand.service.IpManageQueryService
+import com.iplease.server.ip.release.global.common.service.IpManageQueryService
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
