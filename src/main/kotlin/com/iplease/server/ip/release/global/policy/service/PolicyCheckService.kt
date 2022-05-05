@@ -10,4 +10,6 @@ interface PolicyCheckService {
     fun checkDemandAccess(demandUuid: Long, accessorUuid: Long): Mono<Any>
     fun checkAssignedIpExists(assignedIpUuid: Long): Mono<Any>
     fun checkAssignedIpAccess(assignedIpUuid: Long, accessorUuid: Long): Mono<Any>
+    fun checkReserveExists(reserveUuid: Long): Mono<Any>
+    fun checkReserveAccess(reserveUuid: Long, accessorUuid: Long): Mono<Any>
 }

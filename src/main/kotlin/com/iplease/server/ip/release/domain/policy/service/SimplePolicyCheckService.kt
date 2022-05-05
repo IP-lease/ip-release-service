@@ -1,15 +1,18 @@
 package com.iplease.server.ip.release.domain.policy.service
 
-import com.iplease.server.ip.release.domain.demand.exception.UnknownAssignedIpException
-import com.iplease.server.ip.release.domain.demand.exception.WrongAccessAssignedIpException
-import com.iplease.server.ip.release.domain.demand.exception.WrongAccessDemandException
+import com.iplease.server.ip.release.global.demand.exception.UnknownAssignedIpException
+import com.iplease.server.ip.release.global.demand.exception.WrongAccessAssignedIpException
+import com.iplease.server.ip.release.global.demand.exception.WrongAccessDemandException
 import com.iplease.server.ip.release.global.common.exception.PermissionDeniedException
 import com.iplease.server.ip.release.global.common.type.Permission
 import com.iplease.server.ip.release.global.common.type.Role
 import com.iplease.server.ip.release.global.demand.exception.UnknownDemandException
-import com.iplease.server.ip.release.global.demand.service.IpManageQueryService
+import com.iplease.server.ip.release.global.common.service.IpManageQueryService
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
 import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.global.reserve.exception.UnknownReserveException
+import com.iplease.server.ip.release.global.reserve.exception.WrongAccessReserveException
+import com.iplease.server.ip.release.global.reserve.service.IpReleaseReserveQueryService
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
@@ -17,6 +20,7 @@ import reactor.kotlin.core.publisher.toMono
 @Service
 class SimplePolicyCheckService(
     private val ipReleaseDemandQueryService: IpReleaseDemandQueryService,
+    private val ipReleaseReserveQueryService: IpReleaseReserveQueryService,
     private val ipManageQueryService: IpManageQueryService,
 ): PolicyCheckService {
     override fun checkPermission(role: Role, permission: Permission) =
@@ -49,5 +53,20 @@ class SimplePolicyCheckService(
             .flatMap {
                 if(it.issuerUuid == accessorUuid) Mono.just(Any())
                 else Mono.defer { Mono.error(WrongAccessAssignedIpException(assignedIpUuid, accessorUuid)) }
+            }
+
+    override fun checkReserveExists(reserveUuid: Long) =
+        ipReleaseReserveQueryService.existsReserveByUuid(reserveUuid.toMono())
+            .flatMap {
+                if(it) Mono.just(Any())
+                else Mono.defer { Mono.error(UnknownReserveException(reserveUuid)) }
+            }
+
+    override fun checkReserveAccess(reserveUuid: Long, accessorUuid: Long) =
+        ipReleaseReserveQueryService.getReserveByUuid(reserveUuid.toMono())
+            .map { it.issuerUuid }
+            .flatMap {
+                if(it == accessorUuid) Mono.just(Any())
+                else Mono.defer { Mono.error(WrongAccessReserveException(reserveUuid, accessorUuid)) }
             }
 }
