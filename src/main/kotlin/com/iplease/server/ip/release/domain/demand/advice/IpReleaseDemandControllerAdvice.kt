@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.domain.demand.controller.advice
+package com.iplease.server.ip.release.domain.demand.advice
 
 import com.iplease.server.ip.release.domain.demand.controller.IpReleaseDemandController
 import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
