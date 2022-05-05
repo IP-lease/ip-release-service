@@ -13,6 +13,6 @@ class GlobalControllerDemandAdvice {
     @ExceptionHandler(UnknownDemandException::class)
     fun handle(exception: UnknownDemandException) =
         ErrorResponse(ErrorCode.UNKNOWN_DEMAND, "해제신청을 찾을 수 없습니다.", "uuid가 ${exception.uuid}인 할당IP 해제신청을 찾을 수 없습니다.")
-            .let { ResponseEntity.ok(it) }
+            .let { ResponseEntity.badRequest().body(it) }
             .let { it.toMono() }
 }
