@@ -1,16 +1,15 @@
 package com.iplease.server.ip.release.domain.demand.controller.advice
 
+import com.iplease.server.ip.release.domain.demand.controller.IpReleaseDemandController
 import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.domain.demand.exception.*
-import com.iplease.server.ip.release.global.demand.exception.UnknownDemandException
-import com.iplease.server.ip.release.global.common.exception.PermissionDeniedException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import reactor.kotlin.core.publisher.toMono
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = [IpReleaseDemandController::class])
 class IpReleaseDemandControllerAdvice {
     @ExceptionHandler(AlreadyDemandedAssignedIpException::class)
     fun handle(exception: AlreadyDemandedAssignedIpException) =
@@ -24,21 +23,9 @@ class IpReleaseDemandControllerAdvice {
             .let { ResponseEntity.ok(it) }
             .let { it.toMono() }
 
-    @ExceptionHandler(PermissionDeniedException::class)
-    fun handle(exception: PermissionDeniedException) =
-        ErrorResponse(ErrorCode.PERMISSION_DENIED, "권한이 없습니다!", "해당 작업을 수행하려면 ${exception.permission} 권한이 필요합니다.")
-            .let { ResponseEntity.ok(it) }
-            .let { it.toMono() }
-
     @ExceptionHandler(UnknownAssignedIpException::class)
     fun handle(exception: UnknownAssignedIpException) =
         ErrorResponse(ErrorCode.UNKNOWN_ASSIGNED_IP, "할당IP를 찾을 수 없습니다.", "uuid가 ${exception.uuid}인 할당IP를 찾을 수 없습니다.")
-            .let { ResponseEntity.ok(it) }
-            .let { it.toMono() }
-
-    @ExceptionHandler(UnknownDemandException::class)
-    fun handle(exception: UnknownDemandException) =
-        ErrorResponse(ErrorCode.UNKNOWN_DEMAND, "해제신청을 찾을 수 없습니다.", "uuid가 ${exception.uuid}인 할당IP 해제신청을 찾을 수 없습니다.")
             .let { ResponseEntity.ok(it) }
             .let { it.toMono() }
 
