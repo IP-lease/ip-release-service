@@ -52,9 +52,9 @@ class IpReleaseReserveControllerTest {
     fun reserveReleaseIpSuccess() {
         val dto = IpReleaseReserveDto(reserveUuid, assignedIpUuid, operatorUuid, releaseAt)
         val role = Role.values().filter { it.hasPermission(Permission.IP_RELEASE_RESERVE) }.random()
-        whenever(ipReleaseReserveService.reserve(assignedIpUuid, operatorUuid)).thenReturn(dto.toMono())
+        whenever(ipReleaseReserveService.reserve(assignedIpUuid, operatorUuid, releaseAt)).thenReturn(dto.toMono())
 
-        val response = target.reserveReleaseIp(assignedIpUuid, operatorUuid, role).block()!!
+        val response = target.reserveReleaseIp(assignedIpUuid, releaseAt, operatorUuid, role).block()!!
         val body = response.body!!
 
         assert(body.uuid == reserveUuid)
@@ -64,6 +64,6 @@ class IpReleaseReserveControllerTest {
         verify(policyCheckService, times(1)).checkPermission(role, Permission.IP_RELEASE_RESERVE)
         verify(policyCheckService, times(1)).checkAssignedIpExists(assignedIpUuid)
         verify(policyCheckService, times(1)).checkAssignedIpAccess(assignedIpUuid, operatorUuid)
-        verify(ipReleaseReserveService, times(1)).reserve(assignedIpUuid, operatorUuid)
+        verify(ipReleaseReserveService, times(1)).reserve(assignedIpUuid, operatorUuid, releaseAt)
     }
 }

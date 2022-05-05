@@ -8,6 +8,7 @@ import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/ip/release/reserve")
@@ -17,12 +18,13 @@ class IpReleaseReserveController(
 ) {
     @PostMapping("/{assignedIpUuid}")
     fun reserveReleaseIp(@PathVariable assignedIpUuid: Long,
+                         @RequestParam releaseAt: LocalDate,
                          @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                          @RequestHeader("X-Login-Account-Role") role: Role): Mono<ResponseEntity<ReserveReleaseIpResponse>> =
         policyCheckService.checkPermission(role, Permission.IP_RELEASE_RESERVE)
             .flatMap { policyCheckService.checkAssignedIpExists(assignedIpUuid) }
             .flatMap { policyCheckService.checkAssignedIpAccess(assignedIpUuid, issuerUuid) }
-            .flatMap { ipReleaseReserveService.reserve(assignedIpUuid, issuerUuid) }
+            .flatMap { ipReleaseReserveService.reserve(assignedIpUuid, issuerUuid, releaseAt) }
     .map { ReserveReleaseIpResponse(it.uuid, it.assignedIpUuid, it.issuerUuid, it.releaseAt) }
     .map { ResponseEntity.ok(it) }
 }
