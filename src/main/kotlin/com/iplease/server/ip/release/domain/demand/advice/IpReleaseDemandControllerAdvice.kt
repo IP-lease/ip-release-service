@@ -5,6 +5,9 @@ import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.domain.demand.exception.*
 import com.iplease.server.ip.release.global.demand.exception.AlreadyDemandedAssignedIpException
+import com.iplease.server.ip.release.global.demand.exception.UnknownAssignedIpException
+import com.iplease.server.ip.release.global.demand.exception.WrongAccessAssignedIpException
+import com.iplease.server.ip.release.global.demand.exception.WrongAccessDemandException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler

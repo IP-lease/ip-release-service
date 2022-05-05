@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.domain.demand.exception
+package com.iplease.server.ip.release.global.demand.exception
 
 class WrongAccessDemandException(
     val uuid: Long,
