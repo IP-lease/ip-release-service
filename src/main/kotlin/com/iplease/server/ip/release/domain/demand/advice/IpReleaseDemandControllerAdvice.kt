@@ -19,7 +19,7 @@ class IpReleaseDemandControllerAdvice {
 
     @ExceptionHandler(NotCancelableDemandException::class)
     fun handle(exception: NotCancelableDemandException) =
-        ErrorResponse(ErrorCode.UN_CANCELABLE_DEMAND, "취소할 수 없는 신청입니다!", "이미 해당 할당IP에 대한 해제신청이 진행중입니다.")
+        ErrorResponse(ErrorCode.UN_CANCELABLE_DEMAND, "취소할 수 없는 신청입니다!", "해당신청의 상태를 재확인해주세요.")
             .let { ResponseEntity.badRequest().body(it) }
             .let { it.toMono() }
 }

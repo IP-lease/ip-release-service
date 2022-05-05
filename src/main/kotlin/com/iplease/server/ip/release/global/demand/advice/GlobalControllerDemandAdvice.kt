@@ -11,6 +11,7 @@ import reactor.kotlin.core.publisher.toMono
 
 @RestControllerAdvice
 class GlobalControllerDemandAdvice {
+    //TODo AssignedIp 관련해서 차라리 도메인을 하나 더 만들지 고민해보기 (IpManageService 와 함께)
     @ExceptionHandler(UnknownAssignedIpException::class)
     fun handle(exception: UnknownAssignedIpException) =
         ErrorResponse(ErrorCode.UNKNOWN_ASSIGNED_IP, "할당IP를 찾을 수 없습니다.", "uuid가 ${exception.uuid}인 할당IP를 찾을 수 없습니다.")
