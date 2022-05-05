@@ -27,6 +27,10 @@ class IpReleaseReserveServiceImpl(
             .flatMap { ipReleaseReserveRepository.save(it) }
             .map { IpReleaseReserveDto(it.uuid, it.assignedIpUuid, it.issuerUuid, it.releaseAt) }
 
+    override fun cancelReserve(assignedIpUuid: Long): Mono<Unit> {
+        TODO("Not yet implemented")
+    }
+
     //TODO PolicyCheckService 를 통해 Controller 단에서 처리하는게 좋지 않을지 고려해보기
     private fun checkAlreadyDemanded(assignedIpUuid: Long): Mono<Unit> =
         ipReleaseDemandRepository.existsByAssignedIpUuid(assignedIpUuid).checkTemplate(AlreadyDemandedAssignedIpException(assignedIpUuid), true)

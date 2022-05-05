@@ -34,12 +34,31 @@ class IpReleaseReserveControllerTest {
             on { checkPermission(any(), any()) } doReturn monoJustAny
             on { checkAssignedIpExists(any())} doReturn monoJustAny
             on { checkAssignedIpAccess(any(), any()) } doReturn monoJustAny
+            on { checkReserveExists(any())} doReturn monoJustAny
+            on { checkReserveAccess(any(), any()) } doReturn monoJustAny
         }
         target = IpReleaseReserveController(ipReleaseReserveService, policyCheckService)
         reserveUuid = Random.nextLong()
         assignedIpUuid = Random.nextLong()
         operatorUuid = Random.nextLong()
         releaseAt = LocalDate.now().plusDays(1)
+    }
+    //IP 할당 해제 예약 취소 조건
+    //예약이 존재해야하며 -> PolicyCheckService 단에 위임
+    //예약의 소유자가 신청자여야 하며 -> PolicyCheckService 단에 위임
+    //해제일이 오늘이 아니어야 하며 -> Service 단에 위임
+    //예약이 취소 가능해야 한다. -> Service 단에 위임
+    @Test @DisplayName("IP 할당 해제 예약 취소 - 취소 성공")
+    fun cancelReserveReleaseIpSuccess() {
+        val role = Role.values().filter { it.hasPermission(Permission.IP_RELEASE_RESERVE_CANCEL) }.random()
+        whenever(ipReleaseReserveService.cancelReserve(reserveUuid)).thenReturn(Mono.just(Unit))
+
+        val response = target.cancelReserveReleaseIp(reserveUuid, operatorUuid, role).block()!!
+
+        assert(response.statusCode.is2xxSuccessful)
+        verify(policyCheckService, times(1)).checkPermission(role, Permission.IP_RELEASE_RESERVE_CANCEL)
+        verify(policyCheckService, times(1)).checkReserveExists(reserveUuid)
+        verify(policyCheckService, times(1)).checkReserveAccess(reserveUuid, operatorUuid)
     }
     //IP 할당 해제 예약 조건
     //IP_RELEASE_RESERVE 권한을 가지고 있어야하며 -> PolicyCheckService 단에 위임
@@ -57,6 +76,7 @@ class IpReleaseReserveControllerTest {
         val response = target.reserveReleaseIp(assignedIpUuid, releaseAt, operatorUuid, role).block()!!
         val body = response.body!!
 
+        assert(response.statusCode.is2xxSuccessful)
         assert(body.uuid == reserveUuid)
         assert(body.assignedIpUuid == assignedIpUuid)
         assert(body.issuerUuid == operatorUuid)

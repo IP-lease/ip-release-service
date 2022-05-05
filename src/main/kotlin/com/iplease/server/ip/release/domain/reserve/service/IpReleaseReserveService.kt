@@ -6,4 +6,5 @@ import java.time.LocalDate
 
 interface IpReleaseReserveService {
     fun reserve(assignedIpUuid: Long, issuerUuid: Long, releaseAt: LocalDate): Mono<IpReleaseReserveDto>
+    fun cancelReserve(assignedIpUuid: Long): Mono<Unit>
 }
