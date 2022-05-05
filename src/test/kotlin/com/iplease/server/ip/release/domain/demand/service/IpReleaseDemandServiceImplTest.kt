@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.demand.service
 
-import com.iplease.server.ip.release.domain.demand.exception.AlreadyDemandedAssignedIpException
+import com.iplease.server.ip.release.global.demand.exception.AlreadyDemandedAssignedIpException
 import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.domain.demand.data.table.IpReleaseDemandTable
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType

@@ -4,6 +4,7 @@ import com.iplease.server.ip.release.domain.demand.controller.IpReleaseDemandCon
 import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.domain.demand.exception.*
+import com.iplease.server.ip.release.global.demand.exception.AlreadyDemandedAssignedIpException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
