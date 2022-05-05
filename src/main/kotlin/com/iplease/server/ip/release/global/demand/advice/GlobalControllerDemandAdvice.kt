@@ -11,12 +11,6 @@ import reactor.kotlin.core.publisher.toMono
 
 @RestControllerAdvice
 class GlobalControllerDemandAdvice {
-    @ExceptionHandler(AlreadyDemandedAssignedIpException::class)
-    fun handle(exception: AlreadyDemandedAssignedIpException) =
-        ErrorResponse(ErrorCode.ALREADY_DEMANDED, "이미 신청하셧습니다!", "이미 해당 할당IP에 대한 해제신청이 진행중입니다.")
-            .let { ResponseEntity.badRequest().body(it) }
-            .let { it.toMono() }
-
     @ExceptionHandler(UnknownAssignedIpException::class)
     fun handle(exception: UnknownAssignedIpException) =
         ErrorResponse(ErrorCode.UNKNOWN_ASSIGNED_IP, "할당IP를 찾을 수 없습니다.", "uuid가 ${exception.uuid}인 할당IP를 찾을 수 없습니다.")

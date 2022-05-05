@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.reserve.service
 
-import com.iplease.server.ip.release.global.demand.exception.AlreadyDemandedAssignedIpException
+import com.iplease.server.ip.release.domain.demand.exception.AlreadyDemandedAssignedIpException
 import com.iplease.server.ip.release.domain.reserve.data.table.IpReleaseReserveTable
 import com.iplease.server.ip.release.domain.reserve.exception.AlreadyReservedAssignedIpException
 import com.iplease.server.ip.release.domain.reserve.exception.OutOfRangeReleaseDateException

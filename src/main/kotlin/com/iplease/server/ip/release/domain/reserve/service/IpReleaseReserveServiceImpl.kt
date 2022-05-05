@@ -7,7 +7,7 @@ import com.iplease.server.ip.release.domain.reserve.exception.OutOfRangeReleaseD
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
 import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.global.common.util.DateUtil
-import com.iplease.server.ip.release.global.demand.exception.AlreadyDemandedAssignedIpException
+import com.iplease.server.ip.release.domain.demand.exception.AlreadyDemandedAssignedIpException
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
@@ -33,7 +33,8 @@ class IpReleaseReserveServiceImpl(
 
     //TODO PolicyCheckService 를 통해 Controller 단에서 처리하는게 좋지 않을지 고려해보기
     private fun checkAlreadyDemanded(assignedIpUuid: Long): Mono<Unit> =
-        ipReleaseDemandRepository.existsByAssignedIpUuid(assignedIpUuid).checkTemplate(AlreadyDemandedAssignedIpException(assignedIpUuid), true)
+        ipReleaseDemandRepository.existsByAssignedIpUuid(assignedIpUuid).checkTemplate(
+            AlreadyDemandedAssignedIpException(assignedIpUuid), true)
 
     private fun checkAlreadyReserved(assignedIpUuid: Long) =
         ipReleaseReserveRepository.existsByAssignedIpUuid(assignedIpUuid).checkTemplate(AlreadyReservedAssignedIpException(assignedIpUuid), true)
