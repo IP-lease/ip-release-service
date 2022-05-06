@@ -8,6 +8,7 @@ import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveR
 import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.global.common.util.DateUtil
 import com.iplease.server.ip.release.domain.demand.exception.AlreadyDemandedAssignedIpException
+import com.iplease.server.ip.release.domain.reserve.exception.ReleaseAtTodayException
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
@@ -27,12 +28,13 @@ class IpReleaseReserveServiceImpl(
             .flatMap { ipReleaseReserveRepository.save(it) }
             .map { IpReleaseReserveDto(it.uuid, it.assignedIpUuid, it.issuerUuid, it.releaseAt) }
 
-    override fun cancelReserve(assignedIpUuid: Long): Mono<Unit> {
-        TODO("Not yet implemented")
-    }
+    override fun cancelReserve(reserveUuid: Long): Mono<Unit> =
+        checkReleaseAtToday(reserveUuid)
+            .flatMap { ipReleaseReserveRepository.deleteById(reserveUuid) }
+            .then(Unit.toMono())
 
     //TODO PolicyCheckService 를 통해 Controller 단에서 처리하는게 좋지 않을지 고려해보기
-    private fun checkAlreadyDemanded(assignedIpUuid: Long): Mono<Unit> =
+    private fun checkAlreadyDemanded(assignedIpUuid: Long) =
         ipReleaseDemandRepository.existsByAssignedIpUuid(assignedIpUuid).checkTemplate(
             AlreadyDemandedAssignedIpException(assignedIpUuid), true)
 
@@ -44,9 +46,14 @@ class IpReleaseReserveServiceImpl(
             .run { releaseAt.isAfter(first) && releaseAt.isBefore(second) }
             .toMono().checkTemplate(OutOfRangeReleaseDateException(releaseAt))
 
-    private fun <T: RuntimeException> Mono<Boolean>.checkTemplate(onFailed : T, failedCondition: Boolean = false): Mono<Unit> =
+    private fun checkReleaseAtToday(reserveUuid: Long) =
+        ipReleaseReserveRepository.findById(reserveUuid)
+            .map { it.releaseAt.isEqual(dateUtil.dateNow()) }
+            .checkTemplate(ReleaseAtTodayException(reserveUuid), true)
+
+    private fun <T: RuntimeException> Mono<Boolean>.checkTemplate(onFailed : T, failedCondition: Boolean = false): Mono<Any> =
         flatMap {
             if (it == failedCondition) Mono.error(onFailed)
-            else Mono.just(Unit)
+            else Mono.just(Any())
         }
 }

@@ -48,6 +48,6 @@ class IpReleaseReserveQueryServiceImplTest {
 
         assert(value == result)
     }
-}
 
-private fun IpReleaseReserveTable.toDto() = IpReleaseReserveDto(uuid, assignedIpUuid, issuerUuid, releaseAt)
+    private fun IpReleaseReserveTable.toDto() = IpReleaseReserveDto(uuid, assignedIpUuid, issuerUuid, releaseAt)
+}

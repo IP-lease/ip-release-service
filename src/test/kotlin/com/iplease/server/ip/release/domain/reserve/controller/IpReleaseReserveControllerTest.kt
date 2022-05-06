@@ -46,8 +46,7 @@ class IpReleaseReserveControllerTest {
     //IP 할당 해제 예약 취소 조건
     //예약이 존재해야하며 -> PolicyCheckService 단에 위임
     //예약의 소유자가 신청자여야 하며 -> PolicyCheckService 단에 위임
-    //해제일이 오늘이 아니어야 하며 -> Service 단에 위임
-    //예약이 취소 가능해야 한다. -> Service 단에 위임
+    //해제일이 오늘이 아니어야 한다. -> Service 단에 위임
     @Test @DisplayName("IP 할당 해제 예약 취소 - 취소 성공")
     fun cancelReserveReleaseIpSuccess() {
         val role = Role.values().filter { it.hasPermission(Permission.IP_RELEASE_RESERVE_CANCEL) }.random()
@@ -65,7 +64,7 @@ class IpReleaseReserveControllerTest {
     //할당IP 가 존재해야 하며 -> PolicyCheckService 단에 위임
     //할당IP의 소유자가 신청자여야 하며 -> PolicyCheckService 단에 위임`
     //할당IP가 해제신청되지 않았어야 하며 -> Service 단에 위임
-    //이미 에약이 존재하지 않아야하며. -> Service 단에 위임
+    //이미 에약이 존재하지 않아야하며 -> Service 단에 위임
     //예약일이 내일 - 현재 년도 마지막일 사이여한다. -> Service 단에 위임
     @Test @DisplayName("IP 할당 해제 예약 - 예약 성공")
     fun reserveReleaseIpSuccess() {
