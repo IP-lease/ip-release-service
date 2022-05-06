@@ -3,7 +3,7 @@ package com.iplease.server.ip.release.domain.admin.service
 import com.iplease.server.ip.release.domain.admin.exception.NotAcceptableDemandException
 import com.iplease.server.ip.release.domain.demand.data.table.IpReleaseDemandTable
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
-import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
+import com.iplease.server.ip.release.global.demand.repository.IpReleaseDemandRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

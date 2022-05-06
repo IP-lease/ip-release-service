@@ -6,7 +6,7 @@ import com.iplease.server.ip.release.domain.reserve.exception.AlreadyReservedAss
 import com.iplease.server.ip.release.domain.reserve.exception.OutOfRangeReleaseDateException
 import com.iplease.server.ip.release.domain.reserve.exception.ReleaseAtTodayException
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
-import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
+import com.iplease.server.ip.release.global.demand.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.global.common.util.DateUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

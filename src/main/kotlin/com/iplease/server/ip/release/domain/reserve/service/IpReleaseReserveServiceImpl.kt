@@ -5,7 +5,7 @@ import com.iplease.server.ip.release.domain.reserve.data.table.IpReleaseReserveT
 import com.iplease.server.ip.release.domain.reserve.exception.AlreadyReservedAssignedIpException
 import com.iplease.server.ip.release.domain.reserve.exception.OutOfRangeReleaseDateException
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
-import com.iplease.server.ip.release.global.common.repository.IpReleaseDemandRepository
+import com.iplease.server.ip.release.global.demand.repository.IpReleaseDemandRepository
 import com.iplease.server.ip.release.global.common.util.DateUtil
 import com.iplease.server.ip.release.domain.demand.exception.AlreadyDemandedAssignedIpException
 import com.iplease.server.ip.release.domain.reserve.exception.ReleaseAtTodayException

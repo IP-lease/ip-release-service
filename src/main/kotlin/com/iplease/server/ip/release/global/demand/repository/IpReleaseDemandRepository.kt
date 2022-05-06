@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.common.repository
+package com.iplease.server.ip.release.global.demand.repository
 
 import com.iplease.server.ip.release.domain.demand.data.table.IpReleaseDemandTable
 import org.springframework.data.r2dbc.repository.R2dbcRepository
