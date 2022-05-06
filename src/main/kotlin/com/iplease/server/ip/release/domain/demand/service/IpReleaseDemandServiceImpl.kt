@@ -6,11 +6,13 @@ import com.iplease.server.ip.release.global.demand.repository.IpReleaseDemandRep
 import com.iplease.server.ip.release.domain.demand.data.table.IpReleaseDemandTable
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
 import com.iplease.server.ip.release.domain.demand.exception.NotCancelableDemandException
+import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleaseDemandRepository) : IpReleaseDemandService {
+class IpReleaseDemandServiceImpl(private val ipReleaseDemandRepository: IpReleaseDemandRepository) :
+    IpReleaseDemandService {
     override fun demand(assignedIpUuid: Long, issuerUuid: Long): Mono<IpReleaseDemandDto> {
         val table = IpReleaseDemandTable(0L, assignedIpUuid, issuerUuid, DemandStatusType.CREATED)
         return ipReleaseDemandRepository.existsByAssignedIpUuid(assignedIpUuid)

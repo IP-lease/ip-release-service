@@ -1,7 +1,7 @@
 package com.iplease.server.ip.release.domain.demand.controller
 
 import com.iplease.server.ip.release.domain.demand.data.response.DemandReleaseIpResponse
-import com.iplease.server.ip.release.domain.demand.service.IpReleaseDemandService
+import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
 import com.iplease.server.ip.release.global.common.type.Permission
