@@ -5,7 +5,7 @@ import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
 import com.iplease.server.ip.release.domain.reserve.data.table.IpReleaseReserveTable
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
-import com.iplease.server.ip.release.domain.reserve.scheduler.job.ReserveJobImpl
+import com.iplease.server.ip.release.domain.reserve.scheduler.job.SimpleServiceReserveJob
 import com.iplease.server.ip.release.global.common.util.DateUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -17,11 +17,11 @@ import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDate
 import kotlin.random.Random
 
-class ReserveJobImplTest {
+class SimpleServiceReserveJobTest {
     private lateinit var reserveRepository: IpReleaseReserveRepository
     private lateinit var dateUtil: DateUtil
     private lateinit var demandService: IpReleaseDemandService
-    private lateinit var target: ReserveJobImpl
+    private lateinit var target: SimpleServiceReserveJob
     private lateinit var releaseAt: LocalDate
 
     @BeforeEach
@@ -34,7 +34,7 @@ class ReserveJobImplTest {
         reserveRepository = mock()
         dateUtil = mock()
         demandService = mock()
-        target = ReserveJobImpl(reserveRepository, dateUtil, demandService)
+        target = SimpleServiceReserveJob(reserveRepository, dateUtil, demandService)
     }
 
     //reserveAtToday 실행 로직
