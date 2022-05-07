@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
 import com.iplease.server.ip.release.global.admin.data.dto.IpReleaseAcceptDto
 import com.iplease.server.ip.release.global.event.listener.RabbitEventListener
-import com.iplease.server.ip.release.global.event.service.RabbitMqEventSubscribeService
+import com.iplease.server.ip.release.global.event.service.EventSubscribeService
 import com.iplease.server.ip.release.global.event.type.Event
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component
 @Component
 class ReservedIpReleasedListener(
     private val ipReleaseReserveRepository: IpReleaseReserveRepository,
-    rabbitMqEventSubscribeService: RabbitMqEventSubscribeService
+    eventSubscribeService: EventSubscribeService
 ): RabbitEventListener {
-    init { rabbitMqEventSubscribeService.addListener(this ) }
+    init { eventSubscribeService.addListener(this ) }
     val LOGGER = LoggerFactory.getLogger(this::class.java)
 
     override fun handle(event: String, message: Message) {
