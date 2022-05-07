@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.domain.demand.data.response
+package com.iplease.server.ip.release.global.common.data.response
 
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 

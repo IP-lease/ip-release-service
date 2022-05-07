@@ -4,8 +4,8 @@ import com.iplease.server.ip.release.domain.admin.data.response.AcceptReleaseIpR
 import com.iplease.server.ip.release.domain.admin.service.IpReleaseAdminService
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
-import com.iplease.server.ip.release.global.common.type.Permission
-import com.iplease.server.ip.release.global.common.type.Role
+import com.iplease.server.ip.release.global.common.data.type.Permission
+import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

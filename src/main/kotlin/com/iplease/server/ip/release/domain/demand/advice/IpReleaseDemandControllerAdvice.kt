@@ -1,7 +1,7 @@
 package com.iplease.server.ip.release.domain.demand.advice
 
 import com.iplease.server.ip.release.domain.demand.controller.IpReleaseDemandController
-import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
+import com.iplease.server.ip.release.global.common.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.domain.demand.exception.*
 import org.springframework.http.ResponseEntity

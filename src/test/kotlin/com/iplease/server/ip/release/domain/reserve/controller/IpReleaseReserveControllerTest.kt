@@ -2,8 +2,8 @@ package com.iplease.server.ip.release.domain.reserve.controller
 
 import com.iplease.server.ip.release.domain.reserve.data.dto.IpReleaseReserveDto
 import com.iplease.server.ip.release.domain.reserve.service.IpReleaseReserveService
-import com.iplease.server.ip.release.global.common.type.Permission
-import com.iplease.server.ip.release.global.common.type.Role
+import com.iplease.server.ip.release.global.common.data.type.Permission
+import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

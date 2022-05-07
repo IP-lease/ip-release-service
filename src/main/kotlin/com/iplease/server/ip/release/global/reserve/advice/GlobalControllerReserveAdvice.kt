@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.global.reserve.advice
 
-import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
+import com.iplease.server.ip.release.global.common.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.global.reserve.exception.UnknownReserveException
 import com.iplease.server.ip.release.global.reserve.exception.WrongAccessReserveException

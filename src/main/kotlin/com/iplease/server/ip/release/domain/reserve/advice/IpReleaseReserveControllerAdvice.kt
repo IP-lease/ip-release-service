@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.reserve.advice
 
-import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
+import com.iplease.server.ip.release.global.common.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.domain.reserve.controller.IpReleaseReserveController
 import com.iplease.server.ip.release.domain.reserve.exception.AlreadyReservedAssignedIpException

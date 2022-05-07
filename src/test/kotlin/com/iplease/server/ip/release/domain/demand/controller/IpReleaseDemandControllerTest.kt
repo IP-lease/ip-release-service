@@ -5,8 +5,8 @@ import com.iplease.server.ip.release.global.common.service.IpManageQueryService
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
 import com.iplease.server.ip.release.domain.demand.data.type.DemandStatusType
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
-import com.iplease.server.ip.release.global.common.type.Permission
-import com.iplease.server.ip.release.global.common.type.Role
+import com.iplease.server.ip.release.global.common.data.type.Permission
+import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event

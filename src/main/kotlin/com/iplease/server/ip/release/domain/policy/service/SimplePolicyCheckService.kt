@@ -4,8 +4,8 @@ import com.iplease.server.ip.release.global.demand.exception.UnknownAssignedIpEx
 import com.iplease.server.ip.release.global.demand.exception.WrongAccessAssignedIpException
 import com.iplease.server.ip.release.global.demand.exception.WrongAccessDemandException
 import com.iplease.server.ip.release.global.common.exception.PermissionDeniedException
-import com.iplease.server.ip.release.global.common.type.Permission
-import com.iplease.server.ip.release.global.common.type.Role
+import com.iplease.server.ip.release.global.common.data.type.Permission
+import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.demand.exception.UnknownDemandException
 import com.iplease.server.ip.release.global.common.service.IpManageQueryService
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
