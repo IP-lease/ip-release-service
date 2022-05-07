@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.domain.admin.service
 
-import com.iplease.server.ip.release.domain.admin.data.dto.IpReleaseAcceptDto
+import com.iplease.server.ip.release.global.admin.data.dto.IpReleaseAcceptDto
 import com.iplease.server.ip.release.domain.admin.exception.NotAcceptableDemandException
 import com.iplease.server.ip.release.global.demand.repository.IpReleaseDemandRepository
 import org.springframework.stereotype.Service
@@ -14,9 +14,9 @@ class SimpleIpReleaseAdminService(
     override fun acceptDemand(demandUuid: Long, operatorUuid: Long) =
         ipReleaseDemandRepository.findById(demandUuid)
             .flatMap {
-                if(it.status.isAcceptable) acceptDemandComplete(demandUuid, operatorUuid)
+                if(it.status.isAcceptable) acceptDemandComplete(demandUuid, operatorUuid).then(it.toMono())
                 else Mono.error(NotAcceptableDemandException(demandUuid))
-            }.then(IpReleaseAcceptDto(demandUuid, operatorUuid).toMono())
+            }.map{ IpReleaseAcceptDto(it.assignedIpUuid, demandUuid, operatorUuid) }
 
     protected fun acceptDemandComplete(demandUuid: Long, operatorUuid: Long) =
         ipReleaseDemandRepository.deleteById(demandUuid)

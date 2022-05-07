@@ -6,4 +6,5 @@ import reactor.core.publisher.Mono
 
 interface IpReleaseDemandRepository: R2dbcRepository<IpReleaseDemandTable, Long> {
     fun existsByAssignedIpUuid(assignedIpUuid: Long): Mono<Boolean>
+    fun deleteAllByAssignedIpUuid(assignedIpUuid: Long): Mono<Void>
 }

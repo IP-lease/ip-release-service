@@ -9,4 +9,5 @@ import java.time.LocalDate
 interface IpReleaseReserveRepository: R2dbcRepository<IpReleaseReserveTable, Long> {
     fun existsByAssignedIpUuid(assignedIpUuid: Long): Mono<Boolean>
     fun findAllByReleaseAt(releaseAt: LocalDate): Flux<IpReleaseReserveTable>
+    fun deleteAllByAssignedIpUuid(assignedIpUuid: Long): Mono<Void>
 }
