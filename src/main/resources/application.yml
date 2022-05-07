@@ -18,9 +18,11 @@ spring:
       uri: http://${CONFIG_HOSTNAME}:${CONFIG_PORT}
 eureka:
   instance:
-    hostname: ${EUREKA_HOSTNAME}
+    hostname: ${server.address}
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: http://${EUREKA_HOSTNAME}:${EUREKA_PORT}/eureka/
+logging.level:
+    org.springframework.data.r2dbc: DEBUG

@@ -2,7 +2,7 @@ package com.iplease.server.ip.release.domain.admin.advice
 
 import com.iplease.server.ip.release.domain.admin.controller.IpReleaseAdminController
 import com.iplease.server.ip.release.domain.admin.exception.NotAcceptableDemandException
-import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
+import com.iplease.server.ip.release.global.common.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler

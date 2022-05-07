@@ -1,11 +1,11 @@
 package com.iplease.server.ip.release.domain.demand.controller
 
-import com.iplease.server.ip.release.domain.demand.data.response.DemandReleaseIpResponse
-import com.iplease.server.ip.release.domain.demand.service.IpReleaseDemandService
+import com.iplease.server.ip.release.global.demand.data.response.DemandReleaseIpResponse
+import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
 import com.iplease.server.ip.release.global.event.service.EventPublishService
 import com.iplease.server.ip.release.global.event.type.Event
-import com.iplease.server.ip.release.global.common.type.Permission
-import com.iplease.server.ip.release.global.common.type.Role
+import com.iplease.server.ip.release.global.common.data.type.Permission
+import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

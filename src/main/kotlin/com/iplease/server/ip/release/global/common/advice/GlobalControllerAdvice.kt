@@ -1,6 +1,6 @@
 package com.iplease.server.ip.release.global.common.advice
 
-import com.iplease.server.ip.release.domain.demand.data.response.ErrorResponse
+import com.iplease.server.ip.release.global.common.data.response.ErrorResponse
 import com.iplease.server.ip.release.domain.demand.data.type.ErrorCode
 import com.iplease.server.ip.release.global.common.exception.PermissionDeniedException
 import org.springframework.http.HttpStatus
