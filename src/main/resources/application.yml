@@ -18,7 +18,7 @@ spring:
       uri: http://${CONFIG_HOSTNAME}:${CONFIG_PORT}
 eureka:
   instance:
-    hostname: ${EUREKA_HOSTNAME}
+    hostname: ${server.address}
   client:
     register-with-eureka: true
     fetch-registry: true

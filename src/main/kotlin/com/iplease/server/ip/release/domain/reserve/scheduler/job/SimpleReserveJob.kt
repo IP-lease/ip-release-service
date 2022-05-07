@@ -1,8 +1,10 @@
 package com.iplease.server.ip.release.domain.reserve.scheduler.job
 
+import com.iplease.server.ip.release.domain.demand.data.dto.IpReleaseDemandDto
+import com.iplease.server.ip.release.domain.reserve.data.table.IpReleaseReserveTable
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
 import com.iplease.server.ip.release.global.common.util.DateUtil
-import reactor.kotlin.core.publisher.toMono
+import reactor.core.publisher.Mono
 
 abstract class SimpleReserveJob(
     private val reserveRepository: IpReleaseReserveRepository,
@@ -10,8 +12,10 @@ abstract class SimpleReserveJob(
 ): ReserveJob {
     override fun reserveAtToday() =
         reserveRepository.findAllByReleaseAt(dateUtil.dateNow())
-            .flatMap { reserve(it) }
+            .flatMap { reserve(it).map { x -> x to it } }
             .retry()
-            .onErrorContinue { _, _ -> }
-            .flatMap { reserveRepository.deleteById(it.uuid).then(Unit.toMono()) }
+            .onErrorContinue { e, _ -> println(e.message) }
+            .flatMap { delete(it.first, it.second) }
+    abstract fun reserve(table: IpReleaseReserveTable): Mono<IpReleaseDemandDto>
+    abstract fun delete(first: IpReleaseDemandDto, second: IpReleaseReserveTable): Mono<Unit>
 }
