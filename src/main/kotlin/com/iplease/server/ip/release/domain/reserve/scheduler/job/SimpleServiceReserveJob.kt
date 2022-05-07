@@ -1,6 +1,5 @@
 package com.iplease.server.ip.release.domain.reserve.scheduler.job
 
-import com.iplease.server.ip.release.domain.demand.data.dto.IpReleaseDemandDto
 import com.iplease.server.ip.release.domain.reserve.data.table.IpReleaseReserveTable
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
 import com.iplease.server.ip.release.global.common.util.DateUtil
@@ -12,8 +11,8 @@ class SimpleServiceReserveJob(
     dateUtil: DateUtil,
     private val demandService: IpReleaseDemandService
 ) : SimpleReserveJob(reserveRepository, dateUtil) {
-    override fun reserve(table: IpReleaseReserveTable) = demandService.demand(table.assignedIpUuid, table.issuerUuid)
-    override fun delete(first: IpReleaseDemandDto, second: IpReleaseReserveTable) =
-        reserveRepository.deleteById(second.uuid).then(Unit.toMono())
+    override fun demand(table: IpReleaseReserveTable) = demandService.demand(table.assignedIpUuid, table.issuerUuid)
+    override fun delete(table: IpReleaseReserveTable) =
+        reserveRepository.deleteById(table.uuid).then(Unit.toMono())
 
 }
