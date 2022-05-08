@@ -6,13 +6,13 @@ import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.log.service.LoggingService
 import com.iplease.server.ip.release.global.log.type.LoggingActType
+import com.iplease.server.ip.release.global.log.util.CancelReserveRequestInput
 import com.iplease.server.ip.release.global.log.util.ReserveRequestInput
 import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDate
 
 @RestController
@@ -41,30 +41,10 @@ class IpReleaseReserveController(
                                @RequestHeader("X-Login-Account-Uuid") issuerUuid: Long,
                                @RequestHeader("X-Login-Account-Role") role: Role
     ): Mono<ResponseEntity<Unit>> =
-        logCancelReserveRequestStart(reserveUuid, issuerUuid, role)
-            .flatMap { policyCheckService.checkPermission(role, Permission.IP_RELEASE_RESERVE_CANCEL) }
+        policyCheckService.checkPermission(role, Permission.IP_RELEASE_RESERVE_CANCEL)
             .flatMap { policyCheckService.checkReserveExists(reserveUuid) }
             .flatMap { policyCheckService.checkReserveAccess(reserveUuid, issuerUuid) }
             .flatMap { ipReleaseReserveService.cancelReserve(reserveUuid) }
             .map { ResponseEntity.ok(it) }
-            .doOnSuccess { logCancelReserveRequestComplete() }
-            .doOnError{ logCancelReserveRequestError(it) }
-
-    private fun logCancelReserveRequestStart(reserveUuid: Long, issuerUuid: Long, role: Role): Mono<Unit> {
-        val PREFIX = "$CONTROLLER_PREFIX [해제예약 - 취소]"
-        LOGGER.info("$PREFIX 예약취소를 진행합니다.")
-        LOGGER.info("$PREFIX     요청 정보: $reserveUuid, $issuerUuid, $role")
-        return Unit.toMono()
-    }
-
-    private fun logCancelReserveRequestComplete() {
-        val PREFIX = "$CONTROLLER_PREFIX [해제예약 - 취소]"
-        LOGGER.warn("$PREFIX     예약취소를 완료하였습니다.")
-    }
-
-    private fun logCancelReserveRequestError(throwable: Throwable) {
-        val PREFIX = "$CONTROLLER_PREFIX [해제예약 - 취소]"
-        LOGGER.warn("$PREFIX     예약취소중 오류가 발생하였습니다!")
-        LOGGER.warn("$PREFIX     오류 내용: ${throwable.message}")
-    }
+            .let { loggingService.withLog(CancelReserveRequestInput(reserveUuid, issuerUuid, role), it, LoggingActType.CANCEL_RESERVE_REQUEST_LOGGER) }
 }
