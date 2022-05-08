@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component
 @Component
 class CancelReserveRequestLoggerUtil: SimpleLoggerUtil<CancelReserveRequestInput, ResponseEntity<Unit>>(
     LoggerFactory.getLogger(CancelReserveRequestLoggerUtil::class.java),
-    "[RESTAPI] [해제예약 - 신청]"
+    "[RESTAPI] [해제예약 - 취소]"
 ) {
     override fun logOnStart(input: CancelReserveRequestInput, uuid: String) {
-        log("예약취소를 진행합니다.", uuid) { info(it) }
+        log("예약취소를 진행합니다.", uuid, true) { info(it) }
         log("요청 정보: $input", uuid) { info(it) }
     }
 
