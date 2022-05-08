@@ -7,8 +7,8 @@ import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveR
 import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.common.util.DateUtil
 import com.iplease.server.ip.release.global.demand.data.response.DemandReleaseIpResponse
-import com.iplease.server.ip.release.global.log.service.LoggingService
-import com.iplease.server.ip.release.global.log.type.LoggingActType
+import com.iplease.server.ip.release.infra.log.service.LoggingService
+import com.iplease.server.ip.release.infra.log.type.LoggingActType
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono

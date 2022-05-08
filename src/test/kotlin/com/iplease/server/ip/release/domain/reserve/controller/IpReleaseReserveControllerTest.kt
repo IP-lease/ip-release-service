@@ -4,7 +4,8 @@ import com.iplease.server.ip.release.domain.reserve.data.dto.IpReleaseReserveDto
 import com.iplease.server.ip.release.domain.reserve.service.IpReleaseReserveService
 import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role
-import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.infra.log.service.LoggingService
+import com.iplease.server.ip.release.infra.policy.service.PolicyCheckService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -18,6 +19,7 @@ import kotlin.random.Random
 class IpReleaseReserveControllerTest {
     private lateinit var ipReleaseReserveService: IpReleaseReserveService
     private lateinit var policyCheckService: PolicyCheckService
+    private lateinit var loggingService: LoggingService
     private lateinit var target: IpReleaseReserveController
     private var monoJustAny = Mono.just(Any())
     private var reserveUuid by Delegates.notNull<Long>()
@@ -27,6 +29,7 @@ class IpReleaseReserveControllerTest {
 
     @BeforeEach
     fun setUp() {
+        loggingService = mock() { on { withLog(any<Any>(), any<Mono<Any>>(), any()) }.thenAnswer { return@thenAnswer it.arguments[1] } }
         ipReleaseReserveService = mock()
         policyCheckService = mock() {
             on { checkDemandExists(any()) } doReturn monoJustAny
@@ -37,7 +40,7 @@ class IpReleaseReserveControllerTest {
             on { checkReserveExists(any())} doReturn monoJustAny
             on { checkReserveAccess(any(), any()) } doReturn monoJustAny
         }
-        target = IpReleaseReserveController(ipReleaseReserveService, policyCheckService)
+        target = IpReleaseReserveController(ipReleaseReserveService, policyCheckService, loggingService)
         reserveUuid = Random.nextLong()
         assignedIpUuid = Random.nextLong()
         operatorUuid = Random.nextLong()

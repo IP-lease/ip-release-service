@@ -1,8 +1,8 @@
 package com.iplease.server.ip.release.domain.reserve.scheduler
 
 import com.iplease.server.ip.release.domain.reserve.scheduler.job.ReserveJob
-import com.iplease.server.ip.release.global.log.service.LoggingService
-import com.iplease.server.ip.release.global.log.type.LoggingActType
+import com.iplease.server.ip.release.infra.log.service.LoggingService
+import com.iplease.server.ip.release.infra.log.type.LoggingActType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 

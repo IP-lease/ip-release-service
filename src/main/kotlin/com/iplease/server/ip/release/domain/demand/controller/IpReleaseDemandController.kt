@@ -2,15 +2,15 @@ package com.iplease.server.ip.release.domain.demand.controller
 
 import com.iplease.server.ip.release.global.demand.data.response.DemandReleaseIpResponse
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
-import com.iplease.server.ip.release.global.event.service.EventPublishService
-import com.iplease.server.ip.release.global.event.type.Event
 import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role
-import com.iplease.server.ip.release.global.log.service.LoggingService
-import com.iplease.server.ip.release.global.log.type.LoggingActType
-import com.iplease.server.ip.release.global.log.util.CancelDemandRequestInput
-import com.iplease.server.ip.release.global.log.util.DemandRequestInput
-import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.infra.event.service.EventPublishService
+import com.iplease.server.ip.release.infra.event.type.Event
+import com.iplease.server.ip.release.infra.log.service.LoggingService
+import com.iplease.server.ip.release.infra.log.type.LoggingActType
+import com.iplease.server.ip.release.infra.log.util.CancelDemandRequestInput
+import com.iplease.server.ip.release.infra.log.util.DemandRequestInput
+import com.iplease.server.ip.release.infra.policy.service.PolicyCheckService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable

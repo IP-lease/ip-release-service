@@ -8,9 +8,9 @@ import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryS
 import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.domain.demand.data.dto.AssignedIpDto
-import com.iplease.server.ip.release.global.event.service.EventPublishService
-import com.iplease.server.ip.release.global.event.type.Event
-import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.infra.event.type.Event
+import com.iplease.server.ip.release.infra.log.service.LoggingService
+import com.iplease.server.ip.release.infra.policy.service.PolicyCheckService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -26,8 +26,9 @@ class IpReleaseDemandControllerTest {
     private lateinit var ipReleaseDemandService: IpReleaseDemandService
     private lateinit var ipReleaseDemandQueryService: IpReleaseDemandQueryService
     private lateinit var ipManageQueryService: IpManageQueryService
-    private lateinit var eventPublishService: EventPublishService
+    private lateinit var eventPublishService: com.iplease.server.ip.release.infra.event.service.EventPublishService
     private lateinit var policyCheckService: PolicyCheckService
+    private lateinit var loggingService: LoggingService
     private var assignedIpUuid by Delegates.notNull<Long>()
     private var issuerUuid by Delegates.notNull<Long>()
     private var demandUuid by Delegates.notNull<Long>()
@@ -47,11 +48,13 @@ class IpReleaseDemandControllerTest {
             on { checkAssignedIpExists(any())} doReturn monoJustAny
             on { checkAssignedIpAccess(any(), any()) } doReturn monoJustAny
         }
+        loggingService = mock() { on { withLog(any<Any>(), any<Mono<Any>>(), any()) }.thenAnswer { return@thenAnswer it.arguments[1] } }
 
         target = IpReleaseDemandController(
             ipReleaseDemandService,
             eventPublishService,
-            policyCheckService
+            policyCheckService,
+            loggingService
         )
 
         issuerUuid = Random.nextLong()
