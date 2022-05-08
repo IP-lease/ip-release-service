@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.grpc.service
+package com.iplease.server.ip.release.infra.grpc.service
 
 import com.google.protobuf.BoolValue
 import com.google.protobuf.Int64Value

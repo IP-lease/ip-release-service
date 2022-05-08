@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.grpc.config
+package com.iplease.server.ip.release.infra.grpc.config
 
 import com.iplease.lib.ip.release.ReactorIpManageQueryServiceGrpc.ReactorIpManageQueryServiceStub
 import com.linecorp.armeria.client.Clients.newClient

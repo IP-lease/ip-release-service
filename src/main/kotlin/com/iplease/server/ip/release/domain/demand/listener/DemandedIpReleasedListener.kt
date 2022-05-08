@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.iplease.server.ip.release.global.admin.data.dto.IpReleaseAcceptDto
 import com.iplease.server.ip.release.global.demand.repository.IpReleaseDemandRepository
-import com.iplease.server.ip.release.global.event.listener.RabbitEventListener
-import com.iplease.server.ip.release.global.event.service.EventSubscribeService
-import com.iplease.server.ip.release.global.event.type.Event
+import com.iplease.server.ip.release.infra.event.listener.RabbitEventListener
+import com.iplease.server.ip.release.infra.event.service.EventSubscribeService
+import com.iplease.server.ip.release.infra.event.type.Event
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
 import org.springframework.stereotype.Component

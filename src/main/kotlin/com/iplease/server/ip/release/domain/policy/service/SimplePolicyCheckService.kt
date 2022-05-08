@@ -9,7 +9,7 @@ import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.demand.exception.UnknownDemandException
 import com.iplease.server.ip.release.global.common.service.IpManageQueryService
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandQueryService
-import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.infra.policy.service.PolicyCheckService
 import com.iplease.server.ip.release.global.reserve.exception.UnknownReserveException
 import com.iplease.server.ip.release.global.reserve.exception.WrongAccessReserveException
 import com.iplease.server.ip.release.global.reserve.service.IpReleaseReserveQueryService

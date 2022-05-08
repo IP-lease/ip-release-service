@@ -2,11 +2,15 @@ package com.iplease.server.ip.release.domain.demand.controller
 
 import com.iplease.server.ip.release.global.demand.data.response.DemandReleaseIpResponse
 import com.iplease.server.ip.release.global.demand.service.IpReleaseDemandService
-import com.iplease.server.ip.release.global.event.service.EventPublishService
-import com.iplease.server.ip.release.global.event.type.Event
 import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role
-import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.infra.event.service.EventPublishService
+import com.iplease.server.ip.release.infra.event.type.Event
+import com.iplease.server.ip.release.infra.log.service.LoggingService
+import com.iplease.server.ip.release.infra.log.type.LoggingActType
+import com.iplease.server.ip.release.infra.log.util.CancelDemandRequestInput
+import com.iplease.server.ip.release.infra.log.util.DemandRequestInput
+import com.iplease.server.ip.release.infra.policy.service.PolicyCheckService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,7 +25,8 @@ import reactor.core.publisher.Mono
 class IpReleaseDemandController(
     private val ipReleaseDemandService: IpReleaseDemandService,
     private val eventPublishService: EventPublishService,
-    private val policyCheckService: PolicyCheckService
+    private val policyCheckService: PolicyCheckService,
+    private val loggingService: LoggingService
 ) {
     //IP 할당 해제 신청
     @PostMapping("/{assignedIpUuid}") //TODO PathVariable to Payload 전환 고려해보기
@@ -37,6 +42,7 @@ class IpReleaseDemandController(
             .map { eventPublishService.publish(Event.IP_RELEASE_DEMAND_ADD.routingKey, it) }
             .map { DemandReleaseIpResponse(it.uuid, it.assignedIpUuid, it.issuerUuid, it.status) }
             .map { ResponseEntity.ok(it) }
+            .let { loggingService.withLog(DemandRequestInput(assignedIpUuid, issuerUuid, role), it, LoggingActType.DEMAND_REQUEST_LOGGER) }
 
     //IP 할당 해제 신청 취소
     @DeleteMapping("/{demandUuid}")
@@ -50,4 +56,5 @@ class IpReleaseDemandController(
                 .flatMap { checkDemandAccess(demandUuid, issuerUuid) }
         }.flatMap { ipReleaseDemandService.cancel(demandUuid, issuerUuid) }
             .map { ResponseEntity.ok(it) }
+            .let { loggingService.withLog(CancelDemandRequestInput(demandUuid, issuerUuid, role), it, LoggingActType.CANCEL_DEMAND_REQUEST_LOGGER) }
 }

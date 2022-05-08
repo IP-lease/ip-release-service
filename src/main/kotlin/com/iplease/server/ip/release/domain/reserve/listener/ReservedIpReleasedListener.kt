@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveRepository
 import com.iplease.server.ip.release.global.admin.data.dto.IpReleaseAcceptDto
-import com.iplease.server.ip.release.global.event.listener.RabbitEventListener
-import com.iplease.server.ip.release.global.event.service.EventSubscribeService
-import com.iplease.server.ip.release.global.event.type.Event
+import com.iplease.server.ip.release.infra.event.type.Event
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
 import org.springframework.stereotype.Component
@@ -14,8 +12,8 @@ import org.springframework.stereotype.Component
 @Component
 class ReservedIpReleasedListener(
     private val ipReleaseReserveRepository: IpReleaseReserveRepository,
-    eventSubscribeService: EventSubscribeService
-): RabbitEventListener {
+    eventSubscribeService: com.iplease.server.ip.release.infra.event.service.EventSubscribeService
+): com.iplease.server.ip.release.infra.event.listener.RabbitEventListener {
     init { eventSubscribeService.addListener(this ) }
     val LOGGER = LoggerFactory.getLogger(this::class.java)
 

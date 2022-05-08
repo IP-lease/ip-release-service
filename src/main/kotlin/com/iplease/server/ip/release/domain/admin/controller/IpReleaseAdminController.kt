@@ -2,11 +2,11 @@ package com.iplease.server.ip.release.domain.admin.controller
 
 import com.iplease.server.ip.release.domain.admin.data.response.AcceptReleaseIpResponse
 import com.iplease.server.ip.release.domain.admin.service.IpReleaseAdminService
-import com.iplease.server.ip.release.global.event.service.EventPublishService
-import com.iplease.server.ip.release.global.event.type.Event
+import com.iplease.server.ip.release.infra.event.service.EventPublishService
+import com.iplease.server.ip.release.infra.event.type.Event
 import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role
-import com.iplease.server.ip.release.global.policy.service.PolicyCheckService
+import com.iplease.server.ip.release.infra.policy.service.PolicyCheckService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono

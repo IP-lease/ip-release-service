@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.event.type
+package com.iplease.server.ip.release.infra.event.type
 
 enum class Event(
     val routingKey: String

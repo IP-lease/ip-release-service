@@ -1,4 +1,4 @@
-package com.iplease.server.ip.release.global.policy.service
+package com.iplease.server.ip.release.infra.policy.service
 
 import com.iplease.server.ip.release.global.common.data.type.Permission
 import com.iplease.server.ip.release.global.common.data.type.Role

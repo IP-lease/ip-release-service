@@ -12,10 +12,10 @@ abstract class SimpleReserveJob(
 ): ReserveJob {
     override fun reserveAtToday() =
         reserveRepository.findAllByReleaseAt(dateUtil.dateNow())
-            .flatMap { reserve(it).map { x -> x to it } }
-            .retry()
-            .onErrorContinue { e, _ -> println(e.message) }
-            .flatMap { delete(it.first, it.second) }
-    abstract fun reserve(table: IpReleaseReserveTable): Mono<IpReleaseDemandDto>
-    abstract fun delete(first: IpReleaseDemandDto, second: IpReleaseReserveTable): Mono<Unit>
+            .flatMap { demand(it).map { _ -> it } }
+            .onErrorContinue { _, _ ->  }
+            .flatMap { delete(it) }
+
+    abstract fun demand(table: IpReleaseReserveTable): Mono<IpReleaseDemandDto>
+    abstract fun delete(table: IpReleaseReserveTable): Mono<Unit>
 }

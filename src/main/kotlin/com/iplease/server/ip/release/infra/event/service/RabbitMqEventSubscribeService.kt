@@ -1,6 +1,6 @@
-package com.iplease.server.ip.release.global.event.service
+package com.iplease.server.ip.release.infra.event.service
 
-import com.iplease.server.ip.release.global.event.listener.RabbitEventListener
+import com.iplease.server.ip.release.infra.event.listener.RabbitEventListener
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.rabbit.annotation.RabbitListener
 import org.springframework.messaging.handler.annotation.Payload
