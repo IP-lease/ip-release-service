@@ -7,6 +7,8 @@ import com.iplease.server.ip.release.domain.reserve.repository.IpReleaseReserveR
 import com.iplease.server.ip.release.global.common.data.type.Role
 import com.iplease.server.ip.release.global.common.util.DateUtil
 import com.iplease.server.ip.release.global.demand.data.response.DemandReleaseIpResponse
+import com.iplease.server.ip.release.global.log.service.LoggingService
+import com.iplease.server.ip.release.global.log.type.LoggingActType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
@@ -16,41 +18,21 @@ import reactor.kotlin.core.publisher.toMono
 class SimpleControllerReserveJob(
     val reserveRepository: IpReleaseReserveRepository,
     dateUtil: DateUtil,
-    private val ipReleaseDemandController: IpReleaseDemandController
+    private val ipReleaseDemandController: IpReleaseDemandController,
+    private val loggingService: LoggingService
 ) : SimpleReserveJob(reserveRepository, dateUtil) {
     val LOGGER = LoggerFactory.getLogger(this::class.java)
     val JOB_PREFIX = "[JOB]"
-    override fun demand(table: IpReleaseReserveTable): Mono<IpReleaseDemandDto> = logDemandStart(table)
-        .flatMap { ipReleaseDemandController.demandReleaseIp(table.assignedIpUuid, table.issuerUuid, Role.USER) }
-        .doOnError{throwable -> logDemandError(throwable)}
-        .map { responseToDto(it.body!!) }
-        .map { logDemandComplete(it) }
+    override fun demand(table: IpReleaseReserveTable): Mono<IpReleaseDemandDto> =
+        ipReleaseDemandController.demandReleaseIp(table.assignedIpUuid, table.issuerUuid, Role.USER)
+            .map { responseToDto(it.body!!) }
+            .let { loggingService.withLog(table, it, LoggingActType.DEMAND_JOB_LOGGER) }
 
     private fun responseToDto(it: DemandReleaseIpResponse) = IpReleaseDemandDto(it.uuid, it.assignedIpUuid, it.issuerUuid, it.status)
 
     override fun delete(table: IpReleaseReserveTable): Mono<Unit>  = logDeleteStart(table)
         .flatMap { reserveRepository.deleteById(table.uuid).then(Unit.toMono()) }
         .map { logDeleteComplete() }
-
-    private fun logDemandError(throwable: Throwable) {
-        val PREFIX = "$JOB_PREFIX [해제예약 - 신청]"
-        LOGGER.warn("$PREFIX     해제예약중 오류가 발생하였습니다!")
-        LOGGER.warn("$PREFIX     오류 내용: ${throwable.message}")
-    }
-
-    private fun logDemandStart(table: IpReleaseReserveTable): Mono<Unit> {
-        val PREFIX = "$JOB_PREFIX [해제예약 - 신청]"
-        LOGGER.info("$PREFIX 해제예약 정보를 토대로 신청등록을 진행합니다.")
-        LOGGER.info("$PREFIX     해제예약 정보 : $table")
-        return Unit.toMono()
-    }
-
-    private fun logDemandComplete(dto: IpReleaseDemandDto): IpReleaseDemandDto {
-        val PREFIX = "$JOB_PREFIX [해제예약 - 신청]"
-        LOGGER.info("$PREFIX     신청등록을 완료하였습니다.")
-        LOGGER.info("$PREFIX     해제신청 정보 : $dto")
-        return dto
-    }
 
     private fun logDeleteStart(table: IpReleaseReserveTable): Mono<Unit> {
         val PREFIX = "$JOB_PREFIX [해제예약 - 삭제]"
