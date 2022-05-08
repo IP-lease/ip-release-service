@@ -1,0 +1,21 @@
+package com.iplease.server.ip.release.domain.demand.data.type
+
+enum class ErrorCode {
+    PERMISSION_DENIED,
+
+    UNKNOWN_ASSIGNED_IP,
+    UNKNOWN_DEMAND,
+    UNKNOWN_RESERVE,
+
+    WRONG_ACCESS_ASSIGNED_IP,
+    WRONG_ACCESS_DEMAND,
+    WRONG_ACCESS_RESERVE,
+
+    UN_ACCEPTABLE_DEMAND,
+    UN_CANCELABLE_DEMAND,
+
+    ALREADY_DEMANDED,
+    ALREADY_RESERVED,
+
+    OUT_OF_RANGE_RESERVE_RELEASE_DATE
+}
