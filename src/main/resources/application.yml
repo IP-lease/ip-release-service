@@ -16,6 +16,8 @@ spring:
   cloud:
     config:
       uri: http://${CONFIG_HOSTNAME}:${CONFIG_PORT}
+  profiles:
+    active: prod
 eureka:
   instance:
     hostname: ${EUREKA_HOSTNAME}
