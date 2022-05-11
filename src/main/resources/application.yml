@@ -20,7 +20,7 @@ spring:
     active: prod
 eureka:
   instance:
-    hostname: ${server.address}
+    hostname: ${EUREKA_HOSTNAME}
   client:
     register-with-eureka: true
     fetch-registry: true
