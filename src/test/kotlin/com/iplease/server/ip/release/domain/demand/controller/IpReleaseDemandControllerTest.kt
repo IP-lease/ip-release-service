@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.*
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
-import java.time.LocalDateTime
+import java.time.LocalDate
 import kotlin.properties.Delegates
 import kotlin.random.Random
 
@@ -60,7 +60,7 @@ class IpReleaseDemandControllerTest {
         issuerUuid = Random.nextLong()
         demandUuid = Random.nextLong()
         assignedIpUuid = Random.nextLong()
-        assignedIp = AssignedIpDto(assignedIpUuid, issuerUuid, Random.nextLong(), LocalDateTime.now())
+        assignedIp = AssignedIpDto(assignedIpUuid, issuerUuid, Random.nextLong(), LocalDate.now())
     }
 
     //IP 할당 해제 신청 취소 조건
