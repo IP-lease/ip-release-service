@@ -25,6 +25,7 @@ repositories {
 extra["springCloudVersion"] = "2021.0.1"
 
 dependencies {
+    implementation("io.github.key-del-jeeinho:messa-lib:1.0.1-RELEASE")
     implementation(platform("com.linecorp.armeria:armeria-bom:1.16.0"))
 
     implementation(files("libs/ip-release-proto-lib-0.0.1-rc1.jar"))
