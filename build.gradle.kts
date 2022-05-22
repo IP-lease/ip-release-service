@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.iplease"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1-rc1"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 configurations {
@@ -25,7 +25,11 @@ repositories {
 extra["springCloudVersion"] = "2021.0.1"
 
 dependencies {
-    implementation(files("libs/proto-lib-0.0.1-SNAPSHOT.jar"))
+    implementation("io.github.key-del-jeeinho:messa-lib:1.0.1-RELEASE")
+    implementation(platform("com.linecorp.armeria:armeria-bom:1.16.0"))
+
+    implementation(files("libs/ip-release-proto-lib-0.0.1-rc1.jar"))
+    implementation(files("libs/ip-manage-proto-lib-0.0.1-RELEASE.jar"))
 
     implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp")
@@ -51,7 +55,6 @@ dependencies {
     runtimeOnly("dev.miku:r2dbc-mysql")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
-    implementation(platform("com.linecorp.armeria:armeria-bom:1.16.0"))
     implementation("com.linecorp.armeria:armeria")
     implementation("com.linecorp.armeria:armeria-grpc")
     testImplementation("com.linecorp.armeria:armeria-junit5")
