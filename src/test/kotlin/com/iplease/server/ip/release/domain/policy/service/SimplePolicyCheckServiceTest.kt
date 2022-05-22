@@ -23,7 +23,6 @@ import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.*
 import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDate
-import java.time.LocalDateTime
 import kotlin.properties.Delegates
 import kotlin.random.Random
 
@@ -121,7 +120,7 @@ class SimplePolicyCheckServiceTest {
     @Test @DisplayName("할당IP 접근 검사 - 검사 성공")
     fun assignedIpAccessSuccess() {
         val demanderUuid = operatorUuid
-        val dto = AssignedIpDto(assignedIpUuid, demanderUuid, operatorUuid, LocalDateTime.now())
+        val dto = AssignedIpDto(assignedIpUuid, demanderUuid, operatorUuid, LocalDate.now())
         whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(dto.copy(issuerUuid = demanderUuid).toMono())
 
         target.checkAssignedIpAccess(assignedIpUuid, operatorUuid).block()
@@ -130,7 +129,7 @@ class SimplePolicyCheckServiceTest {
     @Test @DisplayName("할당IP 접근 검사 - 접근이 불가능할 경우")
     fun assignedIpAccessFailure() {
         val demanderUuid = operatorUuid * -1
-        val dto = AssignedIpDto(assignedIpUuid, demanderUuid, operatorUuid, LocalDateTime.now())
+        val dto = AssignedIpDto(assignedIpUuid, demanderUuid, operatorUuid, LocalDate.now())
         whenever(ipManageQueryService.getAssignedIpByUuid(any())).thenReturn(dto.copy(issuerUuid = demanderUuid).toMono())
 
         val exception = assertThrows<WrongAccessAssignedIpException> { target.checkAssignedIpAccess(assignedIpUuid, operatorUuid).block() }

@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
 import java.time.LocalDate
 
 @RestController
-@RequestMapping("/ip/release/reserve")
+@RequestMapping("/api/v1/ip/release/reserve")
 class IpReleaseReserveController(
     private val ipReleaseReserveService: IpReleaseReserveService,
     private val policyCheckService: PolicyCheckService,

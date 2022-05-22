@@ -11,18 +11,6 @@ service IpReleaseDemandQueryService {
   rpc getDemandByUuid(google.protobuf.Int64Value) returns (IpReleaseDemand);
   rpc existsDemandByUuid(google.protobuf.Int64Value) returns (google.protobuf.BoolValue);
 }
-//TODO 추후 IpManageServer의 proto-lib 모듈에 이전
-service IpManageQueryService {
-    rpc existsAssignedIpByUuid(google.protobuf.Int64Value) returns (google.protobuf.BoolValue);
-    rpc getAssignedIpByUuid(google.protobuf.Int64Value) returns (AssignedIp);
-}
-
-message AssignedIp {
-  int64 uuid = 1;
-  int64 issuerUuid = 2;
-  int64 assignerUuid = 3;
-  google.protobuf.Timestamp assignedAt = 4;
-}
 
 message IpReleaseDemand {
   int64 uuid = 1;
